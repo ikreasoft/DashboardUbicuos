@@ -122,7 +122,3 @@ project/
 
 3. **Video en tiempo real**:
    ![Cámaras IP](https://m.media-amazon.com/images/I/51O0WS4JOrL._AC_UF894,1000_QL80_.jpg)
-
----
-
-Con este README más detallado, el equipo cuenta con instrucciones claras de instalación, uso y estructura, adaptado a las indicaciones recibidas del Product Owner.
