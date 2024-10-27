@@ -1,7 +1,7 @@
 ---
-title: Estado del arte
+title: Estado del arte 📚
 description: Artículos existentes que se han desarrollado hasta la fecha usando este tema-IoT en Living Lab
-cover: ../../../assets/img/books.jpg
+cover: ../../../assets/img/project/books.jpg
 
 ---
 

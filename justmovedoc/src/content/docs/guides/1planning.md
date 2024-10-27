@@ -1,14 +1,14 @@
 ---
-title: Planning 
+title: Planning 📑
 description: Plan de desarrollo del proyecto monitor just move.
-cover: ../../../assets/img/Plan-de-negocios.png
+cover: ../../../assets/img/project/Plan-de-negocios.png
 ---
 
 
 ## Introducción
 Para crear un plan de proyecto completo desde el 20 de octubre hasta el 1 de diciembre, con un equipo multidisciplinar de tres desarrolladores y teniendo en cuenta tanto la parte de software como hardware, te propongo usar la metodología **Scrum**. Scrum es flexible y permite manejar cambios e iteraciones rápidas, lo cual es ideal para proyectos con hardware y software. Este plan incluirá el uso de **Sprints** de dos semanas, un **Backlog del Producto**, tareas detalladas para cada desarrollador y la integración de un **Tablero Kanban** en GitHub para gestionar el flujo de trabajo.
 
-![living-lab-iot-monitoring](../../../assets/img/projectGitHub.png)
+![living-lab-iot-monitoring](../../../assets/img/project/projectGitHub.png)
 [living-lab-iot-monitoring](https://github.com/orgs/ikreasoft/projects/4)
 
 ### **Plan del Proyecto**
