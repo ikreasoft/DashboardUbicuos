@@ -1,37 +1,25 @@
 ---
 title: Planning 
-description: Get started building your docs site with Starlight.
-template: splash
-hero:
-  tagline: Congrats on setting up a new Starlight project!
-  image:
-    file: ../../assets/houston.webp
-  actions:
-    - text: Example Guide
-      link: /guides/example/
-      icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
+description: Plan de desarrollo del proyecto monitor just move.
+cover: ../../../assets/img/Plan-de-negocios.png
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
 
-<CardGrid stagger>
+## Introducción
 Para crear un plan de proyecto completo desde el 20 de octubre hasta el 1 de diciembre, con un equipo multidisciplinar de tres desarrolladores y teniendo en cuenta tanto la parte de software como hardware, te propongo usar la metodología **Scrum**. Scrum es flexible y permite manejar cambios e iteraciones rápidas, lo cual es ideal para proyectos con hardware y software. Este plan incluirá el uso de **Sprints** de dos semanas, un **Backlog del Producto**, tareas detalladas para cada desarrollador y la integración de un **Tablero Kanban** en GitHub para gestionar el flujo de trabajo.
 
-![living-lab-iot-monitoring](https://github.com/orgs/ikreasoft/projects/4)
+![living-lab-iot-monitoring](../../../assets/img/projectGitHub.png)
+[living-lab-iot-monitoring](https://github.com/orgs/ikreasoft/projects/4)
 
 ### **Plan del Proyecto**
 
-#### **Duración**:
+#### *Duración*:
 - **Inicio**: 20 de octubre
 - **Fin**: 1 de diciembre
 - **Duración Total**: 6 semanas
 - **Sprints**: 3 Sprints de 2 semanas cada uno.
 
-#### **Metodología**:
+#### *Metodología*:
 - **Scrum**: Ideal para iteraciones rápidas y mejora continua.
 - **Equipo**: 3 desarrolladores multidisciplinarios.
 - **Roles en Scrum**:
@@ -43,7 +31,7 @@ Para crear un plan de proyecto completo desde el 20 de octubre hasta el 1 de dic
 
 ### **Backlog del Producto**
 
-#### **Módulo de Hardware: Sensores IoT y Cámaras IP**
+#### *Módulo de Hardware: Sensores IoT y Cámaras IP*
 1. **Integración del ZBDongle Zigbee con sensores reales**:
    - Configuración y prueba de sensores conectados vía Zigbee.
    - Implementar la captura de datos en tiempo real.
@@ -57,7 +45,7 @@ Para crear un plan de proyecto completo desde el 20 de octubre hasta el 1 de dic
    - Crear script en Python para generar al menos 15.000 datos de demostración (últimos 3 meses).
    - **Tiempo estimado**: 0,5 Sprint.
 
-#### **Módulo de Software: Desarrollo del Dashboard**
+#### *Módulo de Software: Desarrollo del Dashboard*
 1. **Diseño del dashboard**:
    - Prototipado de la interfaz con **React.js (Astro)**.
    - Implementación de componentes visuales para mostrar datos de sensores y cámaras.
@@ -79,7 +67,7 @@ Para crear un plan de proyecto completo desde el 20 de octubre hasta el 1 de dic
    - Configurar protocolos de autenticación.
    - **Tiempo estimado**: 0,5 Sprint.
 
-#### **Pruebas y depuración**
+#### *Pruebas y depuración*
 1. **Pruebas unitarias y de integración**:
    - Probar cada módulo por separado y luego integrarlos.
    - **Tiempo estimado**: 0,5 Sprint.
@@ -87,7 +75,7 @@ Para crear un plan de proyecto completo desde el 20 de octubre hasta el 1 de dic
    - Realizar pruebas con los dispositivos IoT y cámaras en el Living Lab.
    - **Tiempo estimado**: 1 Sprint.
    
-#### **Documentación**
+#### *Documentación*
 1. **Documentación técnica con Astro Starlight**:
    - Generar una documentación completa de todo el desarrollo usando **Astro Starlight**.
    - **Tiempo estimado**: 1 Sprint.
@@ -149,6 +137,5 @@ Para crear un plan de proyecto completo desde el 20 de octubre hasta el 1 de dic
 ---
 
 ### **Presupuesto**
-- **200 € adicionales**: Se pueden destinar para comprar sensores IoT adicionales, cables o cualquier otro dispositivo necesario para la integración.
+- **100 € adicionales**: Se pueden destinar para comprar sensores IoT adicionales, cables o cualquier otro dispositivo necesario para la integración.
 
-</CardGrid>
