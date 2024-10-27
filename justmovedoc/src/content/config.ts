@@ -1,6 +1,6 @@
 // 1. Import utilities from `astro:content`
 import { z, defineCollection } from 'astro:content';
-import { docsSchema } from '@astrojs/starlight/schema';
+import { docsSchema, i18nSchema } from '@astrojs/starlight/schema';
 
 // 2. Define your collection(s)
 const blogCollection = defineCollection({
@@ -47,4 +47,5 @@ export const collections = {
   }),
   'blog': blogCollection,
   'team': teamCollection,
+  i18n: defineCollection({ type: 'data', schema: i18nSchema() }),
 };
