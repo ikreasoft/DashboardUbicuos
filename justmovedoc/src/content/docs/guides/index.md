@@ -1,20 +1,7 @@
 ---
 title: Welcome to Starlight
 description: Get started building your docs site with Starlight.
-template: splash
-cover: ../../assets/img/banner.jpg
-hero:
-  tagline: Congrats on setting up a new Starlight project!
-  image:
-    file: ../../assets/houston.webp
-  actions:
-    - text: Example Guide
-      link: /guides/index
-      icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
+cover: ../../../assets/img/producto-plataforma-expediente-digitalizado.png
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';

@@ -1,5 +1,16 @@
+---
+title: Estado del arte
+description: Artículos existentes que se han desarrollado hasta la fecha usando este tema-IoT en Living Lab
+cover: ../../../assets/img/books.jpg
+
+---
+
+## Introducción
+Si bien existen sistemas de monitoreo remoto para personas mayores, pocos se centran en la detección precoz del deterioro cognitivo utilizando tecnologías IoT y aprendizaje automático. Este proyecto propone un enfoque innovador al combinar sensores ambientales, cámaras IP y algoritmos de visión por computadora para identificar patrones de comportamiento asociados con el deterioro cognitivo. **En este caso, nos centraremos en el sistema de control**
+
 ## A Lifestyle Monitoring System for Older Adults Living Independently Using Low-Resolution Smart Meter Data
-**Título del artículo: *Sistema de monitoreo de estilo de vida para adultos mayores que viven independientemente utilizando datos de medidores inteligentes de baja resolución* **
+
+**Título del artículo: Sistema de monitoreo de estilo de vida para adultos mayores que viven independientemente utilizando datos de medidores inteligentes de baja resolución**
 
 **Metodología**:
 El estudio desarrolló un sistema de monitoreo del estilo de vida utilizando datos de medidores inteligentes de baja resolución, recopilados en intervalos de 15 minutos. Se estableció un umbral de potencia de fondo para distinguir entre períodos activos e inactivos (0/1). El sistema cuantifica la actividad mediante una puntuación activa y evalúa las rutinas diarias comparando estas puntuaciones con las normas a largo plazo. Se utilizaron coeficientes de correlación para evaluar la regularidad de las actividades diarias.
@@ -31,9 +42,9 @@ El estudio desarrolló un sistema móvil centralizado para realizar evaluaciones
 Se realizaron dos estudios con 20 pacientes ancianos de una residencia, recopilando factores de riesgo de fragilidad en tres momentos diferentes durante un año.
 
 **Resultados principales:**
-- El sistema permitió determinar el grado de fragilidad de un paciente en relación a otros de una población anciana, con grados de similitud entre 73.4% y 71.6% considerando 61 factores.
-- Se pudo agrupar a los ancianos según su grado de similitud para influir en su cuidado y tratamiento.
-- Un análisis nutricional reveló un deterioro general de los ancianos entre evaluaciones y una mejora de parámetros bioquímicos y antropométricos tras la administración de un suplemento proteico.
+* El sistema permitió determinar el grado de fragilidad de un paciente en relación a otros de una población anciana, con grados de similitud entre 73.4% y 71.6% considerando 61 factores.
+* Se pudo agrupar a los ancianos según su grado de similitud para influir en su cuidado y tratamiento.
+* Un análisis nutricional reveló un deterioro general de los ancianos entre evaluaciones y una mejora de parámetros bioquímicos y antropométricos tras la administración de un suplemento proteico.
 
 > - Multimedia Appendix 1: Model entities and roles to develop frailty assessment tools
 > - Multimedia Appendix 2: Gower’s Coefficient equation
