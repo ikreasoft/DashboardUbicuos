@@ -10,7 +10,7 @@ Este proyecto se enfoca en desarrollar un sistema de monitoreo y control basado 
 <div align="center">
   <!-- Change your logo -->
   <a href="https://github.com/ikreasoft/DashboardUbicuos">
-    <img width="100%" src="https://i.imgur.com/SVvgxJF.png" alt="@ikreasoft/DashboardUbicuos's logo">
+    <img width="100%" src="https://www.uclm.es/-/media/Files/C01-Centros/ITSI/secciones-investigacion/MaMl.ashx?la=es" alt="@ikreasoft/DashboardUbicuos's logo">
   </a>
   <br>
   <a href="https://github.com/ikreasoft/DashboardUbicuos/issues">
