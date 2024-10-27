@@ -1,3 +1,4 @@
+
 # Proyecto: **Dashboard Just Move - Ubicuos**
 
 ## 🤔 **Acerca del Proyecto**
@@ -6,10 +7,27 @@ Este proyecto se enfoca en desarrollar un sistema de monitoreo y control basado 
 
 **Motivación**: La creciente importancia de los sistemas IoT en la automatización impulsa la necesidad de gestionar grandes volúmenes de datos de sensores y actuar en tiempo real. Este proyecto busca ofrecer una solución completa que facilite la administración y el monitoreo en entornos conectados.
 
+<div align="center">
+  <!-- Change your logo -->
+  <a href="https://github.com/ikreasoft/DashboardUbicuos">
+    <img width="100%" src="https://i.imgur.com/SVvgxJF.png" alt="@ikreasoft/DashboardUbicuos's logo">
+  </a>
+  <br>
+  <a href="https://github.com/ikreasoft/DashboardUbicuos/issues">
+    <img src="https://img.shields.io/github/issues/ikreasoft/DashboardUbicuos?color=0088ff&style=for-the-badge&logo=github" alt="ikreasoft/DashboardUbicuos's issues"/>
+  </a>
+  <a href="https://github.com/ikreasoft/DashboardUbicuos/pulls">
+    <img src="https://img.shields.io/github/issues-pr/ikreasoft/DashboardUbicuos?color=0088ff&style=for-the-badge&logo=github"  alt="ikreasoft/DashboardUbicuos's pull requests"/>
+  </a>
+</div>
+
+---
+
 **Objetivos**:
 1. Integrar sensores y actuadores para monitorear condiciones ambientales y gestionar recursos de manera remota.
 2. Crear un dashboard interactivo para la visualización de métricas en tiempo real.
 ---
+
 *Extras*
 3. Garantizar la seguridad en la autenticación y la gestión de usuarios, protegiendo la integridad de los datos.
 
@@ -122,3 +140,43 @@ project/
 
 3. **Video en tiempo real**:
    ![Cámaras IP](https://m.media-amazon.com/images/I/51O0WS4JOrL._AC_UF894,1000_QL80_.jpg)
+
+## 🍰 **Supporters and donators**
+
+<!-- Change your small logo -->
+<a href="https://github.com/ikreasoft/DashboardUbicuos">
+  <img alt="@ikreasoft/DashboardUbicuos's brand logo without text" align="right" src="https://i.imgur.com/3qK1sie.png" width="18%" />
+</a>
+
+
+We are currently looking for new donators to help and maintain this project! ❤️
+
+By donating, you will help the development of this project, and *you will be featured in this DashboardUbicuos's README.md*, so everyone can see your kindness and visit your content ⭐.
+
+<a href="https://github.com/sponsors/ikreasoft"> <!-- MODIFY THIS LINK TO YOUR MAIN DONATING SITE IF YOU ARE NOT IN THE GITHUB SPONSORS PROGRAM -->
+  <img src="https://img.shields.io/badge/Sponsor-ikreasoft/DashboardUbicuos-blue?logo=github-sponsors&style=for-the-badge&color=red">
+</a>
+
+## 🎉 Was the living-lab-iot-monitoring helpful? Help us raise these numbers up
+
+[![GitHub followers](https://img.shields.io/github/followers/ikreasoft.svg?style=social)](https://github.com/ikreasoft)
+[![GitHub stars](https://img.shields.io/github/stars/ikreasoft/DashboardUbicuos.svg?style=social)](https://github.com/ikreasoft/DashboardUbicuos/stargazers)
+[![GitHub watchers](https://img.shields.io/github/watchers/ikreasoft/DashboardUbicuos.svg?style=social)](https://github.com/ikreasoft/DashboardUbicuos/watchers)
+[![GitHub forks](https://img.shields.io/github/forks/ikreasoft/DashboardUbicuos.svg?style=social)](https://github.com/ikreasoft/DashboardUbicuos/network/members)
+<!-- MODIFY THIS LINK TO YOUR MAIN DONATING SITE IF YOU ARE NOT IN THE GITHUB SPONSORS PROGRAM -->
+[![Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=github-sponsors&color=red&style=social)](https://github.com/sponsors/ikreasoft)
+
+Enjoy! 😃
+
+---
+
+## ⚖️📝 **License and Changelog**
+
+See the license in the '**[LICENSE](LICENSE)**' file.
+
+Watch the changes in the '**[CHANGELOG.md](CHANGELOG.md)**' file.
+
+---
+
+_Made with a lot of ❤️❤️ by **[@ikreasoft](https://github.com/ikreasoft)**_
+
