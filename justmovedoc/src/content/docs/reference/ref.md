@@ -1,7 +1,7 @@
 ---
-title: Referencias
+title: Referencias ℹ️
 description: Introducción a las referencias del estado del arte del proyecto JustMove
-cover: ../../../assets/img/documentation.png
+cover: ../../../assets/img/project/documentation.png
 ---
 
 ## Introducción
@@ -20,4 +20,4 @@ El estudio desarrolló un sistema de monitoreo del estilo de vida utilizando dat
 
 ## Ver todas las referencias
 
-- Leer [Estado del arte](../guides/estadodelarte.md) del sistema de IoT en un Living Lab.
+- Leer [Estado del arte](../guides/2estadodelarte.md) del sistema de IoT en un Living Lab.

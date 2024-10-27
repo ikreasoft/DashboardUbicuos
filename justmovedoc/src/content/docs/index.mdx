@@ -1,37 +1,37 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
+title: Bienvenido a Just Move - Documentación del Dashboard 
+description: Plataforma versátil diseñada para satisfacer las necesidades de una amplia gama de usuarios. Ya sea que estés buscando desarrollar una aplicación, analizar datos o investigar nuevas tecnologías, esta documentación te proporcionará las herramientas y conocimientos necesarios.
 template: splash
-cover: ../../assets/img/banner.jpg
+cover: ../../assets/img/project/banner.jpg
 hero:
-  tagline: Congrats on setting up a new Starlight project!
+  tagline: <i>Just Move project!</i>
   image:
-    file: ../../assets/houston.webp
+    file: ../../assets/img/project/jm.webp
   actions:
-    - text: Example Guide
-      link: /guides/index
+    - text: Ver documentación
+      link: /pages/
       icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
+    - text: Ver Dahsboard
+      link: .
       icon: external
       variant: minimal
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Next steps
+## No te olvides de...
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
+	<Card title="Ver guias" icon="pencil">
+		[Ver guias](guides/1planning).
 	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
+	<Card title="Ver estructura del proyecto" icon="add-document">
+		Para visualizar la estructura del proyecto visite: [Estructura Doc. Just Move](pages/index)
 	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
+	<Card title="Acceder a Dashboard JM" icon="setting">
+		Para acceder al Dashboard de monitorización y control, haz clic aquí: [Acceder a DJM](.)
 	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
+	<Card title="Ver repositorio del proyecto" icon="open-book">
+		Visualizar [repositorio git](https://github.com/ikreasoft/DashboardUbicuos).
 	</Card>
 </CardGrid>
