@@ -1,7 +1,7 @@
 ---
 title: Welcome to Dashboard documentation
 description: Get started building your dashboard.
-cover: ../../../assets/img/project/producto-plataforma-expediente-digitalizado.png
+cover: ../../../../assets/img/project/producto-plataforma-expediente-digitalizado.png
 ---
 
 # Files and directories
