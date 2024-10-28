@@ -1,6 +1,6 @@
 ---
-title: Proyecto -- **Dashboard Just Move - Ubicuos**
-cover: ../../../assets/img/project-management.jpg
+title: Proyecto -- Dashboard Just Move - Ubicuos 📈
+cover: ../../../assets/img/project/project-management.jpg
 
 ---
 
