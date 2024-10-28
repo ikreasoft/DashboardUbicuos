@@ -27,7 +27,7 @@ export default defineConfig({
         social: {
             github: 'https://github.com/ikreasoft/DashboardUbicuos/tree/docs',
             'x.com': 'https://twitter.com/mamiotlab',
-            signal: 'https://mamilab.eu/'
+            rss: 'https://mamilab.eu/'
         },
         disable404Route: true,
         sidebar: [            
@@ -60,6 +60,10 @@ export default defineConfig({
             {
                 label: 'Team',
                 autogenerate: { directory: 'team' },                
+            },
+            {
+                label: 'About',
+                autogenerate: { directory: 'pages/es' },                
             },
         ],
         }), expressiveCode(), tailwind(), mdx(), sitemap(), react()],
