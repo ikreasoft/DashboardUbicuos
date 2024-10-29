@@ -26,11 +26,12 @@ When a GET request is made to this route with a specific camera ID parameter, it
 /cameras/:id" to the console. */
 router.get("/cameras/:id", function (req, res) {
     Camera.findById(req.params.id).then(function (camera) {
-        if (camera) {
-            debug("Cameras found:", camera);
-        } else {
-            debug("No camera found.");
-        }
+        console.log(camera);
+        // if (camera) {
+        //     debug("Cameras found:", camera);
+        // } else {
+        //     debug("No camera found.");
+        // }
         res.status(200).json(camera)
     }).catch(function (err) {
         res.status(500).send(err)
