@@ -24,7 +24,7 @@ router.get("/cameras", function (req, res) {
 /* This code snippet defines a route in an Express router that handles GET requests to "/cameras/:id".
 When a GET request is made to this route with a specific camera ID parameter, it will log "GET
 /cameras/:id" to the console. */
-router.get("/cameras/:id", function (req, res) {
+router.get("/camera/:id", function (req, res) {
     Camera.findById(req.params.id).then(function (camera) {
         console.log(camera);
         // if (camera) {
