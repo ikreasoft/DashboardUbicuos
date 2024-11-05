@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
-var CameraSchema = new Schema({
+var ModelSchema = new Schema({
   name: String,
   location: String,
   protocol: String,
@@ -13,7 +13,7 @@ var CameraSchema = new Schema({
   resolution: String,
   streamUrl: String,
   isRecording: Boolean,
-  // configuration: Object,
-  // alertRule: Object
+  configuration: Object,
+  alertRule: Object
 });
-module.exports = mongoose.model("Camera", CameraSchema);
+module.exports = mongoose.model("Model", ModelSchema);

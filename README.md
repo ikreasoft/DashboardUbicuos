@@ -105,6 +105,8 @@ Para acceder al **dashboard**, abre `http://localhost:3000`:
 ```
 project/
 ├── backend/                   # API en Node.js
+│   ├── auxiliar/              # Funciones genericas API
+│   ├── bin/                   # Inicio API
 │   ├── controllers/           # Controladores de rutas
 │   ├── models/                # Modelos de MongoDB, InfluxDB
 │   ├── routes/                # Rutas API

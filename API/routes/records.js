@@ -2,6 +2,7 @@ var express = require("express");
 var mongoose = require("mongoose");
 var router = express.Router();
 var Record = require("../models/Record.js");
+var { verificarToken } = require("../auxiliar/seguridad.js");
 var db = mongoose.connection;
 
 router.get("/:cameraId", function (req, res) {

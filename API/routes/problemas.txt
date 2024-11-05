@@ -1,0 +1,2 @@
+NO coje los cuerpos de las peticiones. 👍   
+El objeto Date está con la hora de Canarias. 👍 
