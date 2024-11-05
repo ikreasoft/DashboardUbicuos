@@ -7,6 +7,22 @@ Este proyecto se enfoca en desarrollar un sistema de monitoreo y control basado 
 
 **Motivación**: La creciente importancia de los sistemas IoT en la automatización impulsa la necesidad de gestionar grandes volúmenes de datos de sensores y actuar en tiempo real. Este proyecto busca ofrecer una solución completa que facilite la administración y el monitoreo en entornos conectados.
 
+<div align="center">
+  <!-- Change your logo -->
+  <a href="https://github.com/ikreasoft/DashboardUbicuos">
+    <img width="100%" src="https://www.uclm.es/-/media/Files/C01-Centros/ITSI/secciones-investigacion/MaMl.ashx?la=es" alt="@ikreasoft/DashboardUbicuos's logo">
+  </a>
+  <br>
+  <a href="https://github.com/ikreasoft/DashboardUbicuos/issues">
+    <img src="https://img.shields.io/github/issues/ikreasoft/DashboardUbicuos?color=0088ff&style=for-the-badge&logo=github" alt="ikreasoft/DashboardUbicuos's issues"/>
+  </a>
+  <a href="https://github.com/ikreasoft/DashboardUbicuos/pulls">
+    <img src="https://img.shields.io/github/issues-pr/ikreasoft/DashboardUbicuos?color=0088ff&style=for-the-badge&logo=github"  alt="ikreasoft/DashboardUbicuos's pull requests"/>
+  </a>
+</div>
+
+---
+
 **Objetivos**:
 1. Integrar sensores y actuadores para monitorear condiciones ambientales y gestionar recursos de manera remota.
 2. Crear un dashboard interactivo para la visualización de métricas en tiempo real.
