@@ -10,7 +10,6 @@ app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
-const port = 3000
 
 const fullURI = "mongodb+srv://chunche95:5pGcOFYhRt0BBk45@cluster0.jq2rb.mongodb.net/iotDB" || "mongodb://localhost:27017/labdb";
 mongoose
@@ -24,11 +23,16 @@ var devicesRouter = require("./routes/devices");
 var recordsRouter = require("./routes/records");
 var recordRouter = require("./routes/record");
 var usersRouter = require("./routes/users");
+var rolesRouter = require("./routes/roles");
+var sessionsRouter = require("./routes/sessions");
 app.use("/", indexRouter);
+
 app.use("/devices", devicesRouter);
 app.use("/records", recordsRouter);
 app.use("/record", recordRouter);
 app.use("/users", usersRouter);
+app.use("/roles", rolesRouter);
+app.use("/sessions", sessionsRouter);
 
 
 app.use(express.json());

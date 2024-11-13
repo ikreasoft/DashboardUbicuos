@@ -7,11 +7,6 @@ var db = mongoose.connection;
 
 router.get("/record/:id", function (req, res) {
     Record.findById(req.params.id).then(function (record) {
-        if (record) {
-            console.log("Record found:", record);
-        } else {
-            console.log("No record found.");
-        }
         res.status(200).json(record)
     }).catch(function (err) {
         res.status(500).send(err)

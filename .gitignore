@@ -23,3 +23,4 @@ ignore.*
 *.pem
 
 ###< ikreasoft/DashboardUbicuos ###
+dashboard/
