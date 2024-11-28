@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, Typography, Box, Grid } from "@mui/material";
 import {
   Chart as ChartJS,
@@ -27,21 +27,82 @@ ChartJS.register(
   Legend
 );
 
+const API_URL = "http://localhost:3000"; // Cambia esto si tu backend está en otra URL
+
 const Home: React.FC = () => {
-  // Datos para el gráfico de línea
-  const lineData = {
-    labels: ["January", "February", "March", "April", "May"],
-    datasets: [
-      {
-        label: "Sensor Values",
-        data: [400, 300, 200, 278, 189],
-        borderColor: "#42A5F5",
-        backgroundColor: "rgba(66, 165, 245, 0.5)",
-        fill: true,
-      },
-    ],
+  // Estado para los datos de los gráficos
+  const [lineData, setLineData] = useState<any>({
+    labels: [],
+    datasets: [],
+  });
+  const [barData, setBarData] = useState<any>({
+    labels: [],
+    datasets: [],
+  });
+
+  const [metrics, setMetrics] = useState({
+    activeSensors: 0,
+    inactiveSensors: 0,
+    errorSensors: 0,
+    totalReadings: 0,
+  });
+
+  // Obtener datos del backend
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`${API_URL}/sensors`); // Endpoint del backend para sensores
+      const sensors = await response.json();
+
+      // Procesar los datos para el gráfico de líneas
+      const months = ["January", "February", "March", "April", "May"];
+      const sensorValues = sensors.map((sensor: any) => sensor.value);
+
+      setLineData({
+        labels: months,
+        datasets: [
+          {
+            label: "Sensor Values",
+            data: sensorValues.slice(0, months.length),
+            borderColor: "#42A5F5",
+            backgroundColor: "rgba(66, 165, 245, 0.5)",
+            fill: true,
+          },
+        ],
+      });
+
+      // Procesar los datos para el gráfico de barras
+      const active = sensors.filter((sensor: any) => sensor.status === "active").length;
+      const inactive = sensors.filter((sensor: any) => sensor.status === "inactive").length;
+      const error = sensors.filter((sensor: any) => sensor.status === "error").length;
+
+      setBarData({
+        labels: ["Active", "Inactive", "Error"],
+        datasets: [
+          {
+            label: "Sensor Status",
+            data: [active, inactive, error],
+            backgroundColor: ["#66BB6A", "#FF7043", "#FFCA28"],
+          },
+        ],
+      });
+
+      // Actualizar métricas principales
+      setMetrics({
+        activeSensors: active,
+        inactiveSensors: inactive,
+        errorSensors: error,
+        totalReadings: sensors.length,
+      });
+    } catch (error) {
+      console.error("Error fetching sensor data:", error);
+    }
   };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // Opciones para los gráficos
   const lineOptions: any = {
     responsive: true,
     plugins: {
@@ -53,18 +114,6 @@ const Home: React.FC = () => {
         text: "Sensor Values Over Time",
       },
     },
-  };
-
-  // Datos para el gráfico de barras
-  const barData = {
-    labels: ["Active", "Inactive", "Error"],
-    datasets: [
-      {
-        label: "Sensor Status",
-        data: [45, 20, 10],
-        backgroundColor: ["#66BB6A", "#FF7043", "#FFCA28"],
-      },
-    ],
   };
 
   const barOptions: any = {
@@ -91,7 +140,7 @@ const Home: React.FC = () => {
           <Card sx={{ padding: 2, textAlign: "center" }}>
             <Typography variant="h6">Active Sensors</Typography>
             <Typography variant="h4" color="primary">
-              684
+              {metrics.activeSensors}
             </Typography>
           </Card>
         </Grid>
@@ -99,7 +148,7 @@ const Home: React.FC = () => {
           <Card sx={{ padding: 2, textAlign: "center" }}>
             <Typography variant="h6">Inactive Sensors</Typography>
             <Typography variant="h4" color="error">
-              120
+              {metrics.inactiveSensors}
             </Typography>
           </Card>
         </Grid>
@@ -107,7 +156,7 @@ const Home: React.FC = () => {
           <Card sx={{ padding: 2, textAlign: "center" }}>
             <Typography variant="h6">Errors Detected</Typography>
             <Typography variant="h4" color="warning">
-              15
+              {metrics.errorSensors}
             </Typography>
           </Card>
         </Grid>
@@ -115,7 +164,7 @@ const Home: React.FC = () => {
           <Card sx={{ padding: 2, textAlign: "center" }}>
             <Typography variant="h6">Total Readings</Typography>
             <Typography variant="h4" color="secondary">
-              12,345
+              {metrics.totalReadings}
             </Typography>
           </Card>
         </Grid>

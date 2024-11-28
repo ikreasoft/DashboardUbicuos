@@ -113,14 +113,11 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
   authProvider={authProvider}
   resources={[
     {
-      name: "blog_posts",
-      list: "/blog-posts",
-      create: "/blog-posts/create",
-      edit: "/blog-posts/edit/:id",
-      show: "/blog-posts/show/:id",
-      meta: {
-        canDelete: true,
-      },
+      name: "devices",
+      list: "/devices",
+      create: "/devices/create",
+      edit: "/devices/edit/:id",
+      show: "/devices/show/:id",
     },
     {
       name: "categories",
@@ -128,27 +125,14 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
       create: "/categories/create",
       edit: "/categories/edit/:id",
       show: "/categories/show/:id",
-      meta: {
-        canDelete: true,
-      },
     },
     {
-      name: "sensores", 
-      list: "/sensores", 
-      create: "/sensores/create", 
-      edit: "/sensores/edit/:id",
-      show: "/sensores/show/:id", 
-      meta: {
-        canDelete: true, 
-      },
+      name: "records",
+      list: "/records",
+      create: "/records/create",
+      edit: "/records/edit/:id",
+      show: "/records/show/:id",
     },
-    {
-      name: "home", 
-      list: "/home", 
-      meta: {
-        label: "Home", 
-      },
-    },    
   ]}
   options={{
     syncWithLocation: true,
@@ -156,10 +140,9 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
     useNewQueryKeys: true,
   }}
 >
+  {props.children}
+</Refine>
 
-              {props.children}
-              <RefineKbar />
-            </Refine>
           </RefineSnackbarProvider>
         </ColorModeContextProvider>
       </RefineKbarProvider>
