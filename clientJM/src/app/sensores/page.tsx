@@ -1,28 +1,26 @@
 "use client";
 
+import React from "react";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useMany } from "@refinedev/core";
 import {
-  DateField,
-  DeleteButton,
-  EditButton,
   List,
-  MarkdownField,
-  ShowButton,
   useDataGrid,
+  EditButton,
+  ShowButton,
+  DeleteButton,
 } from "@refinedev/mui";
-import React from "react";
 
-export default function BlogPostList() {
+export default function SensoresList() {
   const { dataGridProps } = useDataGrid({
-    syncWithLocation: true,
+    syncWithLocation: true, // Sincroniza la paginación con la URL
   });
 
-  const { data: categoryData, isLoading: categoryIsLoading } = useMany({
-    resource: "categorias",
+  const { data: sensorTypeData, isLoading: sensorTypeIsLoading } = useMany({
+    resource: "sensorTypes", // Cambia este recurso si es diferente
     ids:
       dataGridProps?.rows
-        ?.map((item: any) => item?.category?.id)
+        ?.map((item: any) => item?.type?.id)
         .filter(Boolean) ?? [],
     queryOptions: {
       enabled: !!dataGridProps?.rows,
@@ -38,52 +36,33 @@ export default function BlogPostList() {
         minWidth: 50,
       },
       {
-        field: "title",
+        field: "name",
+        headerName: "Name",
         flex: 1,
-        headerName: "Title",
-        minWidth: 200,
+        minWidth: 150,
       },
       {
-        field: "content",
+        field: "type",
+        headerName: "Type",
         flex: 1,
-        headerName: "Content",
-        minWidth: 250,
-        renderCell: function render({ value }) {
-          if (!value) return "-";
-          return <MarkdownField value={value?.slice(0, 80) + "..." || ""} />;
-        },
-      },
-      {
-        field: "category",
-        flex: 1,
-        headerName: "Category",
-        minWidth: 300,
+        minWidth: 150,
         valueGetter: ({ row }) => {
-          const value = row?.category;
+          const value = row?.type;
           return value;
         },
         renderCell: function render({ value }) {
-          return categoryIsLoading ? (
+          return sensorTypeIsLoading ? (
             <>Loading...</>
           ) : (
-            categoryData?.data?.find((item) => item.id === value?.id)?.title
+            sensorTypeData?.data?.find((item) => item.id === value?.id)?.title
           );
         },
       },
       {
         field: "status",
-        flex: 1,
         headerName: "Status",
-        minWidth: 200,
-      },
-      {
-        field: "createdAt",
         flex: 1,
-        headerName: "Created at",
-        minWidth: 250,
-        renderCell: function render({ value }) {
-          return <DateField value={value} />;
-        },
+        minWidth: 120,
       },
       {
         field: "actions",
@@ -103,7 +82,7 @@ export default function BlogPostList() {
         minWidth: 80,
       },
     ],
-    [categoryData]
+    [sensorTypeData]
   );
 
   return (
