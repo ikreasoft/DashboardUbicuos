@@ -118,6 +118,7 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
       create: "/devices/create",
       edit: "/devices/edit/:id",
       show: "/devices/show/:id",
+      meta: { canDelete: true },
     },
     {
       name: "categories",

@@ -11,9 +11,8 @@ import {
   Title,
   Tooltip,
   Legend,
-  BarElement,
 } from "chart.js";
-import { Line, Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 
 // Registrar componentes de Chart.js
 ChartJS.register(
@@ -21,48 +20,48 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   Title,
   Tooltip,
   Legend
 );
 
-const API_URL = "http://localhost:3000"; // Cambia esto si tu backend está en otra URL
+const API_URL = "http://localhost:4000"; // URL del backend
 
 const Home: React.FC = () => {
-  // Estado para los datos de los gráficos
   const [lineData, setLineData] = useState<any>({
-    labels: [],
-    datasets: [],
-  });
-  const [barData, setBarData] = useState<any>({
     labels: [],
     datasets: [],
   });
 
   const [metrics, setMetrics] = useState({
-    activeSensors: 0,
-    inactiveSensors: 0,
-    errorSensors: 0,
-    totalReadings: 0,
+    totalDataPoints: 0,
+    types: {},
   });
 
   // Obtener datos del backend
   const fetchData = async () => {
     try {
-      const response = await fetch(`${API_URL}/sensors`); // Endpoint del backend para sensores
-      const sensors = await response.json();
+      const response = await fetch(`${API_URL}/sensor-data`);
+      const sensorData = await response.json();
 
-      // Procesar los datos para el gráfico de líneas
-      const months = ["January", "February", "March", "April", "May"];
-      const sensorValues = sensors.map((sensor: any) => sensor.value);
+      // Extraer métricas
+      const totalDataPoints = sensorData.length;
+      const typeCounts: Record<string, number> = {};
+
+      sensorData.forEach((item: any) => {
+        typeCounts[item.type] = (typeCounts[item.type] || 0) + 1;
+      });
+
+      // Procesar datos para el gráfico
+      const labels = sensorData.map((item: any) => item.from);
+      const values = sensorData.map((item: any) => item.value);
 
       setLineData({
-        labels: months,
+        labels,
         datasets: [
           {
             label: "Sensor Values",
-            data: sensorValues.slice(0, months.length),
+            data: values,
             borderColor: "#42A5F5",
             backgroundColor: "rgba(66, 165, 245, 0.5)",
             fill: true,
@@ -70,28 +69,9 @@ const Home: React.FC = () => {
         ],
       });
 
-      // Procesar los datos para el gráfico de barras
-      const active = sensors.filter((sensor: any) => sensor.status === "active").length;
-      const inactive = sensors.filter((sensor: any) => sensor.status === "inactive").length;
-      const error = sensors.filter((sensor: any) => sensor.status === "error").length;
-
-      setBarData({
-        labels: ["Active", "Inactive", "Error"],
-        datasets: [
-          {
-            label: "Sensor Status",
-            data: [active, inactive, error],
-            backgroundColor: ["#66BB6A", "#FF7043", "#FFCA28"],
-          },
-        ],
-      });
-
-      // Actualizar métricas principales
       setMetrics({
-        activeSensors: active,
-        inactiveSensors: inactive,
-        errorSensors: error,
-        totalReadings: sensors.length,
+        totalDataPoints,
+        types: typeCounts,
       });
     } catch (error) {
       console.error("Error fetching sensor data:", error);
@@ -102,7 +82,6 @@ const Home: React.FC = () => {
     fetchData();
   }, []);
 
-  // Opciones para los gráficos
   const lineOptions: any = {
     responsive: true,
     plugins: {
@@ -111,20 +90,7 @@ const Home: React.FC = () => {
       },
       title: {
         display: true,
-        text: "Sensor Values Over Time",
-      },
-    },
-  };
-
-  const barOptions: any = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      title: {
-        display: true,
-        text: "Sensor Status Distribution",
+        text: "Sensor Data Over Time",
       },
     },
   };
@@ -132,61 +98,38 @@ const Home: React.FC = () => {
   return (
     <Box sx={{ padding: 3 }}>
       <Typography variant="h4" gutterBottom>
-        Dashboard
+        Sensor Dashboard
       </Typography>
       <Grid container spacing={2}>
-        {/* Tarjetas de métricas principales */}
+        {/* Métricas principales */}
         <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ padding: 2, textAlign: "center" }}>
-            <Typography variant="h6">Active Sensors</Typography>
+            <Typography variant="h6">Total Data Points</Typography>
             <Typography variant="h4" color="primary">
-              {metrics.activeSensors}
+              {metrics.totalDataPoints}
             </Typography>
           </Card>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ padding: 2, textAlign: "center" }}>
-            <Typography variant="h6">Inactive Sensors</Typography>
-            <Typography variant="h4" color="error">
-              {metrics.inactiveSensors}
-            </Typography>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ padding: 2, textAlign: "center" }}>
-            <Typography variant="h6">Errors Detected</Typography>
-            <Typography variant="h4" color="warning">
-              {metrics.errorSensors}
-            </Typography>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ padding: 2, textAlign: "center" }}>
-            <Typography variant="h6">Total Readings</Typography>
-            <Typography variant="h4" color="secondary">
-              {metrics.totalReadings}
-            </Typography>
+            <Typography variant="h6">Type Breakdown</Typography>
+            {Object.entries(metrics.types).map(([key, value]) => (
+              <Typography key={key}>
+                <strong>{key}:</strong> {value}
+              </Typography>
+            ))}
           </Card>
         </Grid>
       </Grid>
 
       {/* Gráficos */}
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, marginTop: 4 }}>
-        <Card sx={{ width: 500, height: 300 }}>
+      <Box sx={{ marginTop: 4 }}>
+        <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
-              Sensor Values (Line Chart)
+              Sensor Values Over Time
             </Typography>
             <Line data={lineData} options={lineOptions} />
-          </CardContent>
-        </Card>
-
-        <Card sx={{ width: 500, height: 300 }}>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
-              Sensor Status (Bar Chart)
-            </Typography>
-            <Bar data={barData} options={barOptions} />
           </CardContent>
         </Card>
       </Box>

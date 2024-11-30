@@ -5,7 +5,7 @@ import { useForm } from "@refinedev/react-hook-form";
 import { TextField, Box } from "@mui/material";
 import { Edit } from "@refinedev/mui";
 
-export default function SensoresEdit() {
+export default function ModelEdit() {
   const {
     refineCore: { onFinish, formLoading },
     saveButtonProps,
@@ -14,14 +14,14 @@ export default function SensoresEdit() {
   } = useForm();
 
   const handleFormSubmit = (data: any) => {
-    onFinish(data); // Pasa los datos del formulario a onFinish
+    onFinish(data); // Enviar los datos al backend
   };
 
   return (
     <Edit isLoading={formLoading} saveButtonProps={saveButtonProps}>
       <Box
         component="form"
-        onSubmit={handleSubmit(handleFormSubmit)} // Usa handleSubmit para manejar el envío
+        onSubmit={handleSubmit(handleFormSubmit)}
         sx={{ display: "flex", flexDirection: "column" }}
       >
         <TextField
@@ -31,14 +31,26 @@ export default function SensoresEdit() {
           fullWidth
         />
         <TextField
-          {...register("type", { required: "This field is required" })}
-          label="Type"
+          {...register("location", { required: "This field is required" })}
+          label="Location"
           margin="normal"
           fullWidth
         />
         <TextField
-          {...register("status", { required: "This field is required" })}
-          label="Status"
+          {...register("protocol")}
+          label="Protocol"
+          margin="normal"
+          fullWidth
+        />
+        <TextField
+          {...register("ipAddress")}
+          label="IP Address"
+          margin="normal"
+          fullWidth
+        />
+        <TextField
+          {...register("model")}
+          label="Model"
           margin="normal"
           fullWidth
         />

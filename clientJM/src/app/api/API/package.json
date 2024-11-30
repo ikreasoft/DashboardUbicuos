@@ -1,0 +1,28 @@
+{
+  "name": "dashboardubicuos",
+  "version": "1.0.0",
+  "description": "<!-- markdownlint-disable MD032 MD033-->\r # 🔥 **Josee9988's GitHub Project Template**",
+  "scripts": {
+    "start": "node ./bin/www",
+    "start:dev_windows": "set DEBUG=* & set PORT=3000 & NODE_ENV=development & node ./bin/www"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.1",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "http-errors": "~1.6.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^6.6.5",
+    "morgan": "~1.9.1",
+    "win-node-env": "^0.6.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}
