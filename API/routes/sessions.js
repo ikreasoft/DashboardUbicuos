@@ -2,6 +2,7 @@ var express = require("express");
 var mongoose = require("mongoose");
 var router = express.Router();
 var Session = require("../models/Session.js");
+var SensorData = require("../models/SensorData.js");
 mongoose.set("strictQuery", false);
 var { verificarToken } = require("../auxiliar/seguridad.js");
 
@@ -38,7 +39,6 @@ router.get("/session/:id", function (req, res) {
     });
 });
 router.post("/session", function (req, res) {
-    console.log(req.body);
     Session.create(req.body).then(function (session) {
         res.status(200).json(session)
     }).catch(function (err) {
@@ -60,5 +60,17 @@ router.delete("/session/:id", function (req, res) {
     });
 });
 
+// #endregion
+// #region data
+ router.get("/data/:sesion", function (req, res) {
+    const pagina = req.query.pagina -1;
+    const tamaño = 1000;
+    const sesion = req.params.sesion;
+    SensorData.find({ session: sesion }).limit(tamaño).skip(pagina*tamaño).then(function (data) {
+        res.status(200).json(data)
+    }).catch(function (err) {
+        res.status(500).send(err)
+    });
+});
 // #endregion
 module.exports = router;
