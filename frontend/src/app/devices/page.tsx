@@ -2,69 +2,28 @@
 
 import React from "react";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import {
-  List,
-  useDataGrid,
-  EditButton,
-  ShowButton,
-  DeleteButton,
-} from "@refinedev/mui";
+import { List, useDataGrid, EditButton, ShowButton, DeleteButton } from "@refinedev/mui";
 
 export default function DevicesList() {
   const { dataGridProps } = useDataGrid({
-    resource: "devices",
+    resource: "devices", // Usa el recurso funcional
     syncWithLocation: true,
   });
-  
-  console.log("dataGridProps", dataGridProps);
-  console.log("DataGrid Props:", dataGridProps.rows); // <-- Verifica los datos que llegan
-  console.log("dataGridProps.rows", dataGridProps.rows);
 
+  // Mapea `_id` a `id`
+  const rows = dataGridProps.rows?.map((row) => ({
+    ...row,
+    id: row._id, // Mapea `_id` del backend a `id` para el frontend
+  })) || [];
 
   const columns = React.useMemo<GridColDef[]>(
     () => [
-      {
-        field: "_id",
-        headerName: "ID",
-        type: "string",
-        minWidth: 50,
-        flex: 1,
-      },
-      {
-        field: "name",
-        headerName: "Name",
-        type: "string",
-        minWidth: 150,
-        flex: 1,
-      },
-      {
-        field: "type",
-        headerName: "Type",
-        type: "string",
-        minWidth: 100,
-        flex: 1,
-      },
-      {
-        field: "location",
-        headerName: "Location",
-        type: "string",
-        minWidth: 150,
-        flex: 1,
-      },
-      {
-        field: "protocol",
-        headerName: "Protocol",
-        type: "string",
-        minWidth: 100,
-        flex: 1,
-      },
-      {
-        field: "ipAddress",
-        headerName: "IP Address",
-        type: "string",
-        minWidth: 150,
-        flex: 1,
-      },
+      { field: "id", headerName: "ID", type: "string", minWidth: 50, flex: 1 },
+      { field: "name", headerName: "Name", type: "string", minWidth: 150, flex: 1 },
+      { field: "type", headerName: "Type", type: "string", minWidth: 100, flex: 1 },
+      { field: "location", headerName: "Location", type: "string", minWidth: 150, flex: 1 },
+      { field: "protocol", headerName: "Protocol", type: "string", minWidth: 100, flex: 1 },
+      { field: "ipAddress", headerName: "IP Address", type: "string", minWidth: 150, flex: 1 },
       {
         field: "isActive",
         headerName: "Active",
@@ -77,15 +36,13 @@ export default function DevicesList() {
         field: "actions",
         headerName: "Actions",
         sortable: false,
-        renderCell: function render({ row }) {
-          return (
-            <>
-              <EditButton hideText recordItemId={row._id} />
-              <ShowButton hideText recordItemId={row._id} />
-              <DeleteButton hideText recordItemId={row._id} />
-            </>
-          );
-        },
+        renderCell: ({ row }) => (
+          <>
+            <EditButton hideText recordItemId={row.id} />
+            <ShowButton hideText recordItemId={row.id} />
+            <DeleteButton hideText recordItemId={row.id} />
+          </>
+        ),
         align: "center",
         headerAlign: "center",
         minWidth: 120,
@@ -96,7 +53,7 @@ export default function DevicesList() {
 
   return (
     <List>
-      <DataGrid {...dataGridProps} columns={columns} autoHeight />
+      <DataGrid {...dataGridProps} rows={rows} columns={columns} autoHeight />
     </List>
-  )
+  );
 }

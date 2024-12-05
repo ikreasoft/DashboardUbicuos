@@ -113,6 +113,10 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
   authProvider={authProvider}
   resources={[
     {
+      name: "home",
+      list: "/home", 
+    },
+    {
       name: "devices",
       list: "/devices",
       create: "/devices/create",

@@ -1,140 +1,185 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Card, CardContent, Typography, Box, Grid } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
+import { Bar, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  BarElement,
   PointElement,
   LineElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
-import { Line } from "react-chartjs-2";
 
-// Registrar componentes de Chart.js
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
 );
 
-const API_URL = "http://localhost:4000"; // URL del backend
+const MOCK_DATA = {
+  totalSensors: 50,
+  activeSensors: 45,
+  inactiveSensors: 5,
+  events: 120,
+  doors: {
+    open: 8,
+    closed: 42,
+  },
+  movementOverTime: {
+    labels: ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00"],
+    data: [5, 12, 8, 15, 9, 10],
+  },
+  doorStatus: {
+    labels: ["Puertas Abiertas", "Puertas Cerradas"],
+    data: [8, 42],
+  },
+};
 
-const Home: React.FC = () => {
-  const [lineData, setLineData] = useState<any>({
-    labels: [],
-    datasets: [],
-  });
+const lineChartOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top" as const, 
+    },
+    title: {
+      display: true,
+      text: "Eventos de Movimiento Detectados",
+    },
+  },
+};
 
-  const [metrics, setMetrics] = useState({
-    totalDataPoints: 0,
-    types: {},
-  });
+const barChartOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top" as const, 
+    },
+    title: {
+      display: true,
+      text: "Estado Actual de las Puertas",
+    },
+  },
+};
 
-  // Obtener datos del backend
-  const fetchData = async () => {
-    try {
-      const response = await fetch(`${API_URL}/sensor-data`);
-      const sensorData = await response.json();
+const Dashboard = () => {
+  const [loading] = useState(false);
 
-      // Extraer métricas
-      const totalDataPoints = sensorData.length;
-      const typeCounts: Record<string, number> = {};
-
-      sensorData.forEach((item: any) => {
-        typeCounts[item.type] = (typeCounts[item.type] || 0) + 1;
-      });
-
-      // Procesar datos para el gráfico
-      const labels = sensorData.map((item: any) => item.from);
-      const values = sensorData.map((item: any) => item.value);
-
-      setLineData({
-        labels,
-        datasets: [
-          {
-            label: "Sensor Values",
-            data: values,
-            borderColor: "#42A5F5",
-            backgroundColor: "rgba(66, 165, 245, 0.5)",
-            fill: true,
-          },
-        ],
-      });
-
-      setMetrics({
-        totalDataPoints,
-        types: typeCounts,
-      });
-    } catch (error) {
-      console.error("Error fetching sensor data:", error);
-    }
+  const lineChartData = {
+    labels: MOCK_DATA.movementOverTime.labels,
+    datasets: [
+      {
+        label: "Eventos de Movimiento",
+        data: MOCK_DATA.movementOverTime.data,
+        borderColor: "#42A5F5",
+        backgroundColor: "rgba(66, 165, 245, 0.5)",
+        fill: true,
+      },
+    ],
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const lineOptions: any = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
+  const barChartData = {
+    labels: MOCK_DATA.doorStatus.labels,
+    datasets: [
+      {
+        label: "Estado de Puertas",
+        data: MOCK_DATA.doorStatus.data,
+        backgroundColor: ["#66BB6A", "#FF7043"],
       },
-      title: {
-        display: true,
-        text: "Sensor Data Over Time",
-      },
-    },
+    ],
   };
 
   return (
     <Box sx={{ padding: 3 }}>
       <Typography variant="h4" gutterBottom>
-        Sensor Dashboard
+        Dashboard de Sensores
       </Typography>
-      <Grid container spacing={2}>
-        {/* Métricas principales */}
-        <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ padding: 2, textAlign: "center" }}>
-            <Typography variant="h6">Total Data Points</Typography>
-            <Typography variant="h4" color="primary">
-              {metrics.totalDataPoints}
-            </Typography>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ padding: 2, textAlign: "center" }}>
-            <Typography variant="h6">Type Breakdown</Typography>
-            {Object.entries(metrics.types).map(([key, value]) => (
-              <Typography key={key}>
-                <strong>{key}:</strong> {value}
-              </Typography>
-            ))}
-          </Card>
-        </Grid>
-      </Grid>
 
-      {/* Gráficos */}
-      <Box sx={{ marginTop: 4 }}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
-              Sensor Values Over Time
-            </Typography>
-            <Line data={lineData} options={lineOptions} />
-          </CardContent>
-        </Card>
-      </Box>
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card>
+                <CardContent sx={{ textAlign: "center" }}>
+                  <Typography variant="h6">Sensores Activos</Typography>
+                  <Typography variant="h4" color="primary">
+                    {MOCK_DATA.activeSensors}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card>
+                <CardContent sx={{ textAlign: "center" }}>
+                  <Typography variant="h6">Sensores Inactivos</Typography>
+                  <Typography variant="h4" color="error">
+                    {MOCK_DATA.inactiveSensors}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card>
+                <CardContent sx={{ textAlign: "center" }}>
+                  <Typography variant="h6">Eventos Detectados</Typography>
+                  <Typography variant="h4" color="primary">
+                    {MOCK_DATA.events}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card>
+                <CardContent sx={{ textAlign: "center" }}>
+                  <Typography variant="h6">Puertas Abiertas</Typography>
+                  <Typography variant="h4" color="secondary">
+                    {MOCK_DATA.doors.open}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+
+          <Box sx={{ marginTop: 4 }}>
+            <Grid container spacing={4}>
+              <Grid item xs={12} md={6}>
+                <Card>
+                  <CardContent>
+                    <Line data={lineChartData} options={lineChartOptions} />
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Card>
+                  <CardContent>
+                    <Bar data={barChartData} options={barChartOptions} />
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
+        </>
+      )}
     </Box>
   );
 };
 
-export default Home;
+export default Dashboard;
