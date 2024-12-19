@@ -4,7 +4,7 @@
   "description": "<!-- markdownlint-disable MD032 MD033-->\r # 🔥 **Josee9988's GitHub Project Template**",
   "scripts": {
     "start": "node ./bin/www",
-    "start:dev_windows": "set DEBUG=* & set PORT=3000 & NODE_ENV=development & node ./bin/www"
+    "start:dev_windows": "set DEBUG=* & set PORT=4000 & NODE_ENV=development & node ./bin/www"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +20,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^6.6.5",
     "morgan": "~1.9.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "win-node-env": "^0.6.1"
   },
   "devDependencies": {

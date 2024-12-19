@@ -2,6 +2,7 @@ var express = require("express");
 var mongoose = require("mongoose");
 var router = express.Router();
 var Session = require("../models/Session.js");
+var SensorData = require("../models/SensorData.js");
 mongoose.set("strictQuery", false);
 var { verificarToken } = require("../auxiliar/seguridad.js");
 
@@ -20,10 +21,8 @@ router.get("/", function (req, res) {
     const end = req.query.end;
     const startDate = new Date(start);
     const endDate = new Date(end);
-    console.log(startDate);
-    console.log(endDate);
     console.log("GET /sesiones");
-    Session.find({startSession:{$gte:startDate, $lt: endDate}}).populate('user').populate('devices').then(function (sesiones) {
+    Session.find().populate('user').populate('devices').then(function (sesiones) {
         console.log(sesiones);
         res.status(200).json(sesiones)
     }).catch(function (err) {
@@ -38,7 +37,6 @@ router.get("/session/:id", function (req, res) {
     });
 });
 router.post("/session", function (req, res) {
-    console.log(req.body);
     Session.create(req.body).then(function (session) {
         res.status(200).json(session)
     }).catch(function (err) {
@@ -60,5 +58,31 @@ router.delete("/session/:id", function (req, res) {
     });
 });
 
+// #endregion
+// #region data
+router.get("/data/:sesion", function (req, res) {
+    const sesion = req.params.sesion;
+    console.log("Session ID recibido en el backend:", sesion); // Log para verificar el sessionId
+  
+    const pagina = req.query.pagina ? req.query.pagina - 1 : 0; // Por defecto, página 0
+    const tamaño = 1000;
+  
+    // Validar si el ID es un ObjectId válido
+    if (!mongoose.Types.ObjectId.isValid(sesion)) {
+      return res.status(400).json({ error: "ID de sesión inválido" });
+    }
+  
+    SensorData.find({ session: sesion })
+      .limit(tamaño)
+      .skip(pagina * tamaño)
+      .then(function (data) {
+        res.status(200).json(data);
+      })
+      .catch(function (err) {
+        console.error("Error en el backend:", err); // Log del error en el servidor
+        res.status(500).send(err);
+      });
+  });
+  
 // #endregion
 module.exports = router;

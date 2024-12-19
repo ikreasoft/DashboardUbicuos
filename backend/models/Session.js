@@ -1,10 +1,12 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-var SessionSchema = new Schema({
-    subject: String,
-    startSession: { type: Date, default: Date.now },
-    endSession: Date,
+
+const SessionSchema = new Schema({
+    subject: { type: String, required: true },
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     devices: [{ type: Schema.Types.ObjectId, ref: "Sensor" }],
-    user: { type: Schema.Types.ObjectId, ref: "User" }
+    startSession: { type: Date },
+    endSession: { type: Date }
 });
+
 module.exports = mongoose.model("Session", SessionSchema);

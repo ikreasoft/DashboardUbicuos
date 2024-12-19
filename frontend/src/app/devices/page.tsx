@@ -6,16 +6,17 @@ import { List, useDataGrid, EditButton, ShowButton, DeleteButton } from "@refine
 
 export default function DevicesList() {
   const { dataGridProps } = useDataGrid({
-    resource: "devices", // Usa el recurso funcional
-    syncWithLocation: true,
+    resource: "devices", // Recurso que se sincroniza con el backend
+    syncWithLocation: true, // Asegura sincronización con la URL
   });
 
-  // Mapea `_id` a `id`
-  const rows = dataGridProps.rows?.map((row) => ({
+  // Mapear `_id` a `id` para que funcione con DataGrid
+  const rows = dataGridProps?.rows?.map((row) => ({
     ...row,
-    id: row._id, // Mapea `_id` del backend a `id` para el frontend
+    id: row._id, // Mapea `_id` del backend a `id` esperado por DataGrid
   })) || [];
 
+  // Definición de columnas para la tabla
   const columns = React.useMemo<GridColDef[]>(
     () => [
       { field: "id", headerName: "ID", type: "string", minWidth: 50, flex: 1 },
@@ -38,6 +39,7 @@ export default function DevicesList() {
         sortable: false,
         renderCell: ({ row }) => (
           <>
+            {/* Botones para acciones */}
             <EditButton hideText recordItemId={row.id} />
             <ShowButton hideText recordItemId={row.id} />
             <DeleteButton hideText recordItemId={row.id} />
@@ -48,11 +50,12 @@ export default function DevicesList() {
         minWidth: 120,
       },
     ],
-    []
+    [] // Dependencias vacías para evitar recrear columnas
   );
 
   return (
     <List>
+      {/* DataGrid para listar los dispositivos */}
       <DataGrid {...dataGridProps} rows={rows} columns={columns} autoHeight />
     </List>
   );

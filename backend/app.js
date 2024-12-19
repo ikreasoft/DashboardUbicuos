@@ -1,5 +1,7 @@
 const express = require('express')
 var mongoose = require("mongoose");
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 const app = express()
 var path = require("path");
 var cookieParser = require("cookie-parser");
@@ -26,7 +28,7 @@ var usersRouter = require("./routes/users");
 var rolesRouter = require("./routes/roles");
 var sessionsRouter = require("./routes/sessions");
 app.use("/", indexRouter);
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/devices", devicesRouter);
 app.use("/records", recordsRouter);
 app.use("/record", recordRouter);
