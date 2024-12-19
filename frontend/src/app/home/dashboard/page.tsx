@@ -1,3 +1,4 @@
+// dashboard.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -5,58 +6,56 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
   BarElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
-import { Bar, Line } from "react-chartjs-2";
-import { Box, Grid, Card, CardContent, Typography, CircularProgress } from "@mui/material";
-import { useSearchParams } from "next/navigation"; // Import para manejar los query params
+import { Bar } from "react-chartjs-2";
+import { Box, Grid, Card, CardContent, Typography, CircularProgress, List, ListItem, ListItemText } from "@mui/material";
+import { useSearchParams } from "next/navigation";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const formatAPIData = (apiData: any[]) => {
-  const movementData = apiData.map((item) => item.value || 0);
-  const timestamps = apiData.map((item) =>
-    new Date(item.timestamp).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-  );
+interface SensorData {
+  location: string;
+  value: number;
+  timestamp: string;
+}
 
-  const doorsOpen = apiData.filter((item) => item.value > 0).length;
-  const doorsClosed = apiData.length - doorsOpen;
+interface SessionInfo {
+  user: {
+    fullname: string;
+  };
+  subject: string;
+}
+
+const formatAPIData = (apiData: SensorData[]) => {
+  const doorsOpen = apiData.filter((item) => item.value > 0);
+  const doorsClosed = apiData.filter((item) => item.value === 0);
 
   return {
-    activeSensors: apiData.length,
-    events: movementData.reduce((sum, value) => sum + value, 0),
-    doors: { open: doorsOpen, closed: doorsClosed },
-    movementOverTime: {
-      labels: timestamps,
-      data: movementData,
+    activeSensors: Array.from(new Set(apiData.map((item) => item.location))),
+    doors: {
+      open: doorsOpen,
+      closed: doorsClosed,
+    },
+    doorsOverTime: {
+      labels: apiData.map((item) => new Date(item.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })),
+      open: doorsOpen.map((item) => item.location),
+      closed: doorsClosed.map((item) => item.location),
     },
   };
 };
 
 const Dashboard: React.FC = () => {
-  const searchParams = useSearchParams(); // Hook para leer parámetros de la URL
-  const sessionId = searchParams.get("sessionId"); // Extrae el sessionId de los parámetros de consulta
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get("sessionId");
 
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sessionInfo, setSessionInfo] = useState<SessionInfo | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -67,12 +66,20 @@ const Dashboard: React.FC = () => {
       }
 
       try {
-        const API_URL = `http://localhost:4000/sessions/data/${sessionId}`;
-        const response = await fetch(API_URL);
-        if (!response.ok) {
-          throw new Error(`Error al obtener los datos de la sesión: ${response.status}`);
+        const sessionURL = `http://localhost:4000/sessions/session/${sessionId}`;
+        const sessionResponse = await fetch(sessionURL);
+        if (!sessionResponse.ok) {
+          throw new Error(`Error al obtener la información de la sesión: ${sessionResponse.status}`);
         }
-        const apiData = await response.json();
+        const sessionData = await sessionResponse.json();
+        setSessionInfo(sessionData);
+
+        const dataURL = `http://localhost:4000/sessions/data/${sessionId}`;
+        const dataResponse = await fetch(dataURL);
+        if (!dataResponse.ok) {
+          throw new Error(`Error al obtener los datos de la sesión: ${dataResponse.status}`);
+        }
+        const apiData: SensorData[] = await dataResponse.json();
         if (apiData.length === 0) {
           throw new Error("No se encontraron datos para esta sesión.");
         }
@@ -105,7 +112,7 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  if (!data) {
+  if (!data || !sessionInfo) {
     return (
       <Typography variant="h6" style={{ textAlign: "center" }}>
         No hay datos disponibles.
@@ -113,26 +120,33 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  const lineChartData = {
-    labels: data.movementOverTime.labels,
+  const barChartData = {
+    labels: ["Sensores Abiertos", "Sensores Cerrados"],
     datasets: [
       {
-        label: "Eventos Detectados",
-        data: data.movementOverTime.data,
-        borderColor: "#42A5F5",
-        backgroundColor: "rgba(66, 165, 245, 0.5)",
-        fill: true,
+        label: "Estado de los Sensores",
+        data: [data.doors.open.length, data.doors.closed.length],
+        backgroundColor: ["#66BB6A", "#FF7043"],
       },
     ],
   };
 
-  const barChartData = {
-    labels: ["Puertas Abiertas", "Puertas Cerradas"],
+  const timelineChartData = {
+    labels: data.doorsOverTime.labels,
     datasets: [
       {
-        label: "Estado de las Puertas",
-        data: [data.doors.open, data.doors.closed],
-        backgroundColor: ["#66BB6A", "#FF7043"],
+        label: "Aperturas",
+        data: data.doors.open.map(() => 1),
+        borderColor: "#4CAF50",
+        backgroundColor: "rgba(76, 175, 80, 0.5)",
+        fill: false,
+      },
+      {
+        label: "Cierres",
+        data: data.doors.closed.map(() => 1),
+        borderColor: "#F44336",
+        backgroundColor: "rgba(244, 67, 54, 0.5)",
+        fill: false,
       },
     ],
   };
@@ -143,34 +157,60 @@ const Dashboard: React.FC = () => {
         Dashboard de Sensores
       </Typography>
 
+      <Box sx={{ marginBottom: 4 }}>
+        <Typography variant="h6">Usuario: {sessionInfo.user.fullname}</Typography>
+        <Typography variant="h6">Sujeto: {sessionInfo.subject}</Typography>
+      </Box>
+
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={4}>
           <Card>
             <CardContent sx={{ textAlign: "center" }}>
               <Typography variant="h6">Sensores Activos</Typography>
               <Typography variant="h4" color="primary">
-                {data.activeSensors}
+                {data.activeSensors.length}
               </Typography>
+              <List>
+                {data.activeSensors.map((sensor, index) => (
+                  <ListItem key={index}>
+                    <ListItemText primary={sensor} />
+                  </ListItem>
+                ))}
+              </List>
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={4}>
           <Card>
             <CardContent sx={{ textAlign: "center" }}>
-              <Typography variant="h6">Puertas Abiertas</Typography>
+              <Typography variant="h6">Sensores Abiertos</Typography>
               <Typography variant="h4" color="secondary">
-                {data.doors.open}
+                {data.doors.open.length}
               </Typography>
+              <List>
+                {data.doors.open.map((sensor, index) => (
+                  <ListItem key={index}>
+                    <ListItemText primary={sensor.location} />
+                  </ListItem>
+                ))}
+              </List>
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={4}>
           <Card>
             <CardContent sx={{ textAlign: "center" }}>
-              <Typography variant="h6">Puertas Cerradas</Typography>
+              <Typography variant="h6">Sensores Cerrados</Typography>
               <Typography variant="h4" color="error">
-                {data.doors.closed}
+                {data.doors.closed.length}
               </Typography>
+              <List>
+                {data.doors.closed.map((sensor, index) => (
+                  <ListItem key={index}>
+                    <ListItemText primary={sensor.location} />
+                  </ListItem>
+                ))}
+              </List>
             </CardContent>
           </Card>
         </Grid>
@@ -181,14 +221,14 @@ const Dashboard: React.FC = () => {
           <Grid item xs={12} md={6}>
             <Card>
               <CardContent>
-                <Line data={lineChartData} />
+                <Bar data={barChartData} />
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} md={6}>
             <Card>
               <CardContent>
-                <Bar data={barChartData} />
+                <Bar data={timelineChartData} />
               </CardContent>
             </Card>
           </Grid>

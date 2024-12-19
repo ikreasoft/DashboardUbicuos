@@ -30,17 +30,18 @@ const SessionPage = () => {
     fetchSessions();
   }, []);
 
-  const handleViewDashboard = (sessionId: string) => {
-    console.log("Redirigiendo al dashboard con sessionId:", sessionId); // Log para confirmar el sessionId
-    router.push(`/home/dashboard?sessionId=${sessionId}`);
-  };
+const handleViewDashboard = (sessionId: string) => {
+  console.log("Redirigiendo al dashboard con sessionId:", sessionId); // Log para confirmar el sessionId
+  router.push(`/home/dashboard?sessionId=${sessionId}`);
+};
 
   if (loading) return <CircularProgress />;
 
   return (
     <Box sx={{ padding: 3 }}>
       <Typography variant="h4" gutterBottom>
-        Sesiones 
+        Sesiones
+
       </Typography>
       <Grid container spacing={2}>
         {sessions.map((session) => (

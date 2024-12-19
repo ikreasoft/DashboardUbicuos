@@ -124,7 +124,7 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
       show: "/devices/show/:id",
       meta: { canDelete: true },
     },
-    {
+    /*{
       name: "categories",
       list: "/categories",
       create: "/categories/create",
@@ -137,7 +137,7 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
       create: "/records/create",
       edit: "/records/edit/:id",
       show: "/records/show/:id",
-    },
+    },*/
   ]}
   options={{
     syncWithLocation: true,
