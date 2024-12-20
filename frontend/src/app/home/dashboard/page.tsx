@@ -15,7 +15,7 @@ import {
   ArcElement,
   RadialLinearScale,
 } from "chart.js";
-import { Bar, Radar } from "react-chartjs-2";
+import { Bar, Line } from "react-chartjs-2";
 import { Box, Grid, Card, CardContent, Typography, CircularProgress, List, ListItem, ListItemText } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 
@@ -151,8 +151,8 @@ const Dashboard: React.FC = () => {
         })),
         borderColor: "#4CAF50",
         backgroundColor: "#4CAF50",
-        pointRadius: 5, // Tamaño de los puntos
-        showLine: false, // No conectar puntos con líneas
+        pointRadius: 3, // Tamaño de los puntos
+        showLine: true, // No conectar puntos con líneas
       },
       {
         label: "Cierres",
@@ -162,48 +162,13 @@ const Dashboard: React.FC = () => {
         })),
         borderColor: "#F44336",
         backgroundColor: "#F44336",
-        pointRadius: 5, // Tamaño de los puntos
-        showLine: false, // No conectar puntos con líneas
+        pointRadius: 3, // Tamaño de los puntos
+        showLine: true, // No conectar puntos con líneas
       },
     ],    
   };
 
-  const scatterChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: {
-        type: "category", // Eje X categórico basado en tiempo
-        title: {
-          display: true,
-          text: "Tiempo",
-        },
-      },
-      y: {
-        type: "linear",
-        min: -0.5, // Margen para mejorar visualización
-        max: 1.5,
-        ticks: {
-          stepSize: 1,
-          callback: (value) => (value === 1 ? "Apertura" : "Cierre"),
-        },
-        title: {
-          display: true,
-          text: "Estado",
-        },
-      },
-    },
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: (context) => {
-            const label = context.dataset.label || "";
-            return `${label} - Hora: ${context.raw.x}`;
-          },
-        },
-      },
-    },
-  };
+
 
   
 
@@ -278,7 +243,7 @@ const Dashboard: React.FC = () => {
           <Grid item xs={12} md={6}>
             <Card>
               <CardContent>
-                <Bar data={timelineChartData} />
+                <Line data={timelineChartData} />
               </CardContent>
             </Card>
           </Grid>

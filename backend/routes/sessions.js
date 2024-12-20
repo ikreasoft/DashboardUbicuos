@@ -65,7 +65,7 @@ router.get("/data/:sesion", function (req, res) {
     console.log("Session ID recibido en el backend:", sesion); // Log para verificar el sessionId
   
     const pagina = req.query.pagina ? req.query.pagina - 1 : 0; // Por defecto, página 0
-    const tamaño = 1000;
+    const tamaño = 50
   
     // Validar si el ID es un ObjectId válido
     if (!mongoose.Types.ObjectId.isValid(sesion)) {
