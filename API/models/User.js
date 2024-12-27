@@ -33,10 +33,10 @@ var UserSchema = new Schema({
     creationdate: {
         type: Date,
         default: Date.now
-    },
-    Preferences: {
-        favoriteColor: String
     }
+    // preferences: {
+    //     favoriteColor: String
+    // }
 });
 
 /* El pre middleware se ejecuta antes de que suceda la operacion. 

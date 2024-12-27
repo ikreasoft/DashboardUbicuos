@@ -10,4 +10,4 @@ var PermisionSchema = new Schema({
         modify: { Boolean, default: false } 
     }
 });
-module.exports = mongoose.model("Permision", PermisionSchema);
+module.exports = mongoose.model("Permission", PermisionSchema);

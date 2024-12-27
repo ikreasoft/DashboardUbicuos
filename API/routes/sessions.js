@@ -17,15 +17,14 @@ var db = mongoose.connection;
 // Sample request
 // http://localhost:3000/sessions?start=2024-08-05&end=2025-01-01
 router.get("/", function (req, res) {
-    const start = req.query.start;
-    const end = req.query.end;
+    const start = req.query.start==undefined?new Date(0):req.query.start;
+    const end = req.query.end==undefined?new Date(3000,0,12):req.query.end;
     const startDate = new Date(start);
     const endDate = new Date(end);
     console.log(startDate);
     console.log(endDate);
     console.log("GET /sesiones");
-    Session.find({startSession:{$gte:startDate, $lt: endDate}}).populate('user').populate('devices').then(function (sesiones) {
-        console.log(sesiones);
+    Session.find({startSession:{$gte:startDate, $lte: endDate}}).populate('user').populate('devices').then(function (sesiones) {
         res.status(200).json(sesiones)
     }).catch(function (err) {
         res.status(500).send(err)
@@ -45,7 +44,7 @@ router.post("/session", function (req, res) {
         res.status(500).send(err)
     });
 });
-router.put("/model/:id", function (req, res) {
+router.put("/session/:id", function (req, res) {
     Session.findByIdAndUpdate(req.params.id, req.body, { new: true }).then(function (session) {
         res.status(200).json(session)
     }).catch(function (err) {
@@ -62,12 +61,33 @@ router.delete("/session/:id", function (req, res) {
 
 // #endregion
 // #region data
- router.get("/data/:sesion", function (req, res) {
-    const pagina = req.query.pagina -1;
-    const tamaño = 1000;
+router.get("/data/:sesion", function (req, res) {
+    const pagina = req.query.page==undefined?0:req.query.page -1;
+    const tamaño = req.query.size==undefined?1000:req.query.size;
     const sesion = req.params.sesion;
     SensorData.find({ session: sesion }).limit(tamaño).skip(pagina*tamaño).then(function (data) {
         res.status(200).json(data)
+    }).catch(function (err) {
+        res.status(500).send(err)
+    });
+});
+router.post("/data", function (req, res) {
+    SensorData.create(req.body).then(function (data) {
+        res.status(200).send(data)
+    }).catch(function (err) {
+        res.status(500).send(err)
+    });
+});
+router.delete("/data/session/:sesion", function (req, res) {
+    SensorData.deleteMany({ session: req.params.sesion }).then(function (data) {
+        res.status(200).json(data)
+    }).catch(function (err) {
+        res.status(500).send(err)
+    });
+});
+router.delete("/data/single/:id", function (req, res) {
+    SensorData.findByIdAndDelete(req.params.id).then(function (data) {
+        res.status(200).send("OK")
     }).catch(function (err) {
         res.status(500).send(err)
     });

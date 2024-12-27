@@ -12,6 +12,7 @@ dotenv.config();
 var db = mongoose.connection;
 // Only for admin users
 router.get("/",verificarToken, function (req, res) {
+    console.log(req.headers);
     console.log("GET /users");
     User.find().then(function (users) {
         res.status(200).json(users)
@@ -52,7 +53,7 @@ router.post("/signin",
     },
     function (req, res, next) {
         //debug("... generando token");
-        jwt.sign({username: req.body.username},process.env.TOKEN_SECRET, {expiresIn: 24*3600 // expira en 1 hora...
+        jwt.sign({username: req.body.username},process.env.TOKEN_SECRET, {expiresIn: 24*3600 // expira en 1 día...
         }, function(err, generatedToken) {
             if (err) res.status(500).send("¡Error generando token de autenticación");
             else {
@@ -62,14 +63,6 @@ router.post("/signin",
         });
     });
 
-router.get("/roles",verificarToken, function (req, res) {
-    Role.find().then(function (roles) {
-        res.status(200).json(roles)
-    }).catch(function (err) {
-        res.status(500).send(err)
-    }
-    );
-});
 router.get("/:id",verificarToken, function (req, res) {
     User.findById(req.params.id).then(function (user) {
         res.status(200).json(user)

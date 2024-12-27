@@ -7,7 +7,7 @@ var RecordingSchema = new Schema({
     duration: Number,
     fileSize: Number,
     fileUrl: String,
-    startTime: Date,
+    startTime: {type: Date, default: Date.now},
     endTime: Date
 }); 
 module.exports = mongoose.model("Record", RecordingSchema);

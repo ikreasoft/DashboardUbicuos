@@ -1,8 +1,8 @@
 var jwt = require("jsonwebtoken");
 function verificarToken(req, res, next) {
   var authHeader = req.get('authorization');
-  const retrievedToken = authHeader.split(' ')[0];
-
+  console.log(authHeader);
+  const retrievedToken = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : authHeader;
   if (!retrievedToken) {
     res.status(401).send({
       ok: false,

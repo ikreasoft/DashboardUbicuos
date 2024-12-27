@@ -7,7 +7,8 @@ var { verificarToken } = require("../auxiliar/seguridad.js");
 var db = mongoose.connection;
 
 router.get("/:cameraId", function (req, res) {
-    Record.find({ camera: req.params.cameraId }).populate('camera').then(function (recordings) {
+    console.log("cameraId: " + req.params.cameraId);
+    Record.find({ device: req.params.cameraId }).then(function (recordings) {
         res.status(200).json(recordings)
     }).catch(function (err) {
         res.status(500).send(err)

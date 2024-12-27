@@ -20,21 +20,23 @@ mongoose
   )
   .then(() => console.log("MongoDB DataBase connection successful"));
 
-var indexRouter = require("./routes/index");
 var devicesRouter = require("./routes/devices");
+var indexRouter = require("./routes/index");
+var permissionsRouter = require("./routes/permissions");
 var recordsRouter = require("./routes/records");
 var recordRouter = require("./routes/record");
-var usersRouter = require("./routes/users");
 var rolesRouter = require("./routes/roles");
 var sessionsRouter = require("./routes/sessions");
+var usersRouter = require("./routes/users");
 app.use("/", indexRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/devices", devicesRouter);
+app.use("/permissions", permissionsRouter);
 app.use("/records", recordsRouter);
 app.use("/record", recordRouter);
-app.use("/users", usersRouter);
 app.use("/roles", rolesRouter);
 app.use("/sessions", sessionsRouter);
+app.use("/users", usersRouter);
 
 
 app.use(express.json());
