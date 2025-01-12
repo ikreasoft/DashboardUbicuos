@@ -5,7 +5,7 @@ import { useForm } from "@refinedev/react-hook-form";
 import { TextField, Box } from "@mui/material";
 import { Edit } from "@refinedev/mui";
 
-export default function ModelEdit() {
+export default function EditDevice() {
   const {
     refineCore: { onFinish, formLoading },
     saveButtonProps,
@@ -14,7 +14,7 @@ export default function ModelEdit() {
   } = useForm();
 
   const handleFormSubmit = (data: any) => {
-    onFinish(data); // Enviar los datos al backend
+    onFinish(data); // Enviar los datos actualizados al backend
   };
 
   return (
@@ -25,32 +25,56 @@ export default function ModelEdit() {
         sx={{ display: "flex", flexDirection: "column" }}
       >
         <TextField
-          {...register("name", { required: "This field is required" })}
-          label="Name"
+          {...register("name", { required: "Este campo es obligatorio" })}
+          label="Nombre del dispositivo"
           margin="normal"
           fullWidth
         />
         <TextField
-          {...register("location", { required: "This field is required" })}
-          label="Location"
+          {...register("location", { required: "Este campo es obligatorio" })}
+          label="Ubicación"
+          margin="normal"
+          fullWidth
+        />
+        <TextField
+          {...register("type")}
+          label="Tipo"
           margin="normal"
           fullWidth
         />
         <TextField
           {...register("protocol")}
-          label="Protocol"
+          label="Protocolo"
           margin="normal"
           fullWidth
         />
         <TextField
           {...register("ipAddress")}
-          label="IP Address"
+          label="Dirección IP"
           margin="normal"
           fullWidth
         />
         <TextField
-          {...register("model")}
-          label="Model"
+          {...register("macAddress")}
+          label="Dirección MAC"
+          margin="normal"
+          fullWidth
+        />
+        <TextField
+          {...register("firmwareVersion")}
+          label="Versión del firmware"
+          margin="normal"
+          fullWidth
+        />
+        <TextField
+          {...register("resolution")}
+          label="Resolución"
+          margin="normal"
+          fullWidth
+        />
+        <TextField
+          {...register("streamUrl")}
+          label="URL de transmisión"
           margin="normal"
           fullWidth
         />

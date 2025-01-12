@@ -5,7 +5,7 @@ import { useForm } from "@refinedev/react-hook-form";
 import { TextField, Box } from "@mui/material";
 import { Create } from "@refinedev/mui";
 
-export default function ModelCreate() {
+export default function CreateDevice() {
   const {
     refineCore: { onFinish, formLoading },
     saveButtonProps,
@@ -25,56 +25,56 @@ export default function ModelCreate() {
         sx={{ display: "flex", flexDirection: "column" }}
       >
         <TextField
-          {...register("name", { required: "This field is required" })}
-          label="Name"
+          {...register("name", { required: "Este campo es obligatorio" })}
+          label="Nombre del dispositivo"
           margin="normal"
           fullWidth
         />
         <TextField
-          {...register("location", { required: "This field is required" })}
-          label="Location"
+          {...register("location", { required: "Este campo es obligatorio" })}
+          label="Ubicación"
+          margin="normal"
+          fullWidth
+        />
+        <TextField
+          {...register("type")}
+          label="Tipo"
           margin="normal"
           fullWidth
         />
         <TextField
           {...register("protocol")}
-          label="Protocol"
+          label="Protocolo"
           margin="normal"
           fullWidth
         />
         <TextField
           {...register("ipAddress")}
-          label="IP Address"
-          margin="normal"
-          fullWidth
-        />
-        <TextField
-          {...register("model")}
-          label="Model"
+          label="Dirección IP"
           margin="normal"
           fullWidth
         />
         <TextField
           {...register("macAddress")}
-          label="MAC Address"
+          label="Dirección MAC"
           margin="normal"
           fullWidth
         />
         <TextField
           {...register("firmwareVersion")}
-          label="Firmware Version"
+          label="Versión del firmware"
           margin="normal"
           fullWidth
         />
         <TextField
           {...register("resolution")}
-          label="Resolution"
+          label="Resolución"
           margin="normal"
           fullWidth
         />
         <TextField
           {...register("streamUrl")}
-          label="Stream URL"
+          label="URL de transmisión"
           margin="normal"
           fullWidth
         />

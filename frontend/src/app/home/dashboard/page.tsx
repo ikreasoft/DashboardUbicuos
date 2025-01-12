@@ -8,15 +8,19 @@ import {
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   Title,
   Tooltip,
   Legend,
-  ArcElement,
-  RadialLinearScale,
 } from "chart.js";
-import { Bar, Line } from "react-chartjs-2";
-import { Box, Grid, Card, CardContent, Typography, CircularProgress, List, ListItem, ListItemText } from "@mui/material";
+import { Line } from "react-chartjs-2";
+import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import { useSearchParams } from "next/navigation";
 
 ChartJS.register(
@@ -24,37 +28,30 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   Title,
   Tooltip,
-  Legend,
-  ArcElement,
-  RadialLinearScale
+  Legend
 );
 
 const formatAPIData = (apiData: any[]) => {
-  const timestamps = apiData.map((item) =>
-    new Date(item.timestamp).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-  );
-
+  const sensors = [...new Set(apiData.map((item) => item.location))];
   const doorsOpen = apiData.filter((item) => item.value > 0);
   const doorsClosed = apiData.filter((item) => item.value === 0);
 
-  return {
-    activeSensors: [...new Set(apiData.map((item) => item.location))],
-    doors: {
-      open: doorsOpen,
-      closed: doorsClosed,
-    },
-    doorsOverTime: {
-      labels: timestamps,
-      open: doorsOpen.map((item) => item.location),
-      closed: doorsClosed.map((item) => item.location),
-    },
-  };
+  const sensorData = sensors.map((sensor) => {
+    const events = apiData.filter((item) => item.location === sensor);
+    return {
+      sensor,
+      timestamps: events.map((item) =>
+        new Date(item.timestamp).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      ),
+      values: events.map((item) => (item.value > 0 ? 1 : 0)),
+    };
+  });
+  return { sensors, doorsOpen, doorsClosed, sensorData };
 };
 
 const Dashboard: React.FC = () => {
@@ -78,7 +75,9 @@ const Dashboard: React.FC = () => {
         const sessionURL = `http://localhost:4000/sessions/session/${sessionId}`;
         const sessionResponse = await fetch(sessionURL);
         if (!sessionResponse.ok) {
-          throw new Error(`Error al obtener la información de la sesión: ${sessionResponse.status}`);
+          throw new Error(
+            `Error al obtener la información de la sesión: ${sessionResponse.status}`
+          );
         }
         const sessionData = await sessionResponse.json();
         setSessionInfo(sessionData);
@@ -86,7 +85,9 @@ const Dashboard: React.FC = () => {
         const dataURL = `http://localhost:4000/sessions/data/${sessionId}`;
         const dataResponse = await fetch(dataURL);
         if (!dataResponse.ok) {
-          throw new Error(`Error al obtener los datos de la sesión: ${dataResponse.status}`);
+          throw new Error(
+            `Error al obtener los datos de la sesión: ${dataResponse.status}`
+          );
         }
         const apiData = await dataResponse.json();
         if (apiData.length === 0) {
@@ -129,49 +130,6 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  const barChartData = {
-    labels: ["Sensores Abiertos", "Sensores Cerrados"],
-    datasets: [
-      {
-        label: "Estado de los Sensores",
-        data: [data.doors.open.length, data.doors.closed.length],
-        backgroundColor: ["#66BB6A", "#FF7043"],
-      },
-    ],
-  };
-
-  const timelineChartData = {
-    labels: data.doorsOverTime.labels,
-    datasets: [
-      {
-        label: "Aperturas",
-        data: data.doors.open.map((item, index) => ({
-          x: data.doorsOverTime.labels[index], // Tiempo
-          y: 1, // Valor constante para marcar apertura
-        })),
-        borderColor: "#4CAF50",
-        backgroundColor: "#4CAF50",
-        pointRadius: 3, // Tamaño de los puntos
-        showLine: true, // No conectar puntos con líneas
-      },
-      {
-        label: "Cierres",
-        data: data.doors.closed.map((item, index) => ({
-          x: data.doorsOverTime.labels[index], // Tiempo
-          y: 0, // Valor constante para marcar cierre
-        })),
-        borderColor: "#F44336",
-        backgroundColor: "#F44336",
-        pointRadius: 3, // Tamaño de los puntos
-        showLine: true, // No conectar puntos con líneas
-      },
-    ],    
-  };
-
-
-
-  
-
   return (
     <Box sx={{ padding: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -183,72 +141,83 @@ const Dashboard: React.FC = () => {
         <Typography variant="h6">Sujeto: {sessionInfo.subject}</Typography>
       </Box>
 
-      <Grid container spacing={2}>        
-        <Grid item xs={12} sm={6} md={6}>
-          <Card>
-            <CardContent sx={{ textAlign: "center" }}>
-              <Typography variant="h6">Sensores Abiertos</Typography>
-              <Typography variant="h4" color="secondary">
-                {data.doors.open.length}
-              </Typography>
-             
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={6}>
-          <Card>
-            <CardContent sx={{ textAlign: "center" }}>
-              <Typography variant="h6">Sensores Cerrados</Typography>
-              <Typography variant="h4" color="error">
-                {data.doors.closed.length}
-              </Typography>
-              
-            </CardContent>
-          </Card>
-        </Grid>
-       
-        <Grid item xs={12} sm={12} md={12}>
+      <Grid container spacing={4} sx={{ marginBottom: 4 }}>
+        <Grid item xs={12} sm={4}>
           <Card>
             <CardContent sx={{ textAlign: "center" }}>
               <Typography variant="h6">Sensores Activos</Typography>
               <Typography variant="h4" color="primary">
-                {data.activeSensors.length}
+                {data.sensors.length}
               </Typography>
-              <Grid container spacing={2}>
-              {data.activeSensors.map((sensor: string, index: number) => (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
-                    <Card>
-                      <CardContent sx={{ textAlign: "center" }}>
-                        <Typography variant="h6">Sensor</Typography>
-                        <Typography variant="body1">{sensor}</Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Card>
+            <CardContent sx={{ textAlign: "center" }}>
+              <Typography variant="h6">Sensores Abiertos</Typography>
+              <Typography variant="h4" color="secondary">
+                {data.doorsOpen.length}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Card>
+            <CardContent sx={{ textAlign: "center" }}>
+              <Typography variant="h6">Sensores Cerrados</Typography>
+              <Typography variant="h4" color="error">
+                {data.doorsClosed.length}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
-      
-      <Box sx={{ marginTop: 4 }}>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
+
+      <Grid container spacing={4}>
+        {data.sensorData.map((sensor: any, index: number) => (
+          <Grid item xs={12} md={6} key={index}>
             <Card>
               <CardContent>
-                <Bar data={barChartData} />
+                <Typography variant="h6" gutterBottom>
+                  Sensor: {sensor.sensor}
+                </Typography>
+                <Line
+                  data={{
+                    labels: sensor.timestamps,
+                    datasets: [
+                      {
+                        label: "Estado del Sensor",
+                        data: sensor.values,
+                        borderColor: "#42A5F5",
+                        backgroundColor: "rgba(66, 165, 245, 0.5)",
+                        tension: 0.4,
+                        pointRadius: 5,
+                      },
+                    ],
+                  }}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        display: true,
+                      },
+                    },
+                    scales: {
+                      y: {
+                        ticks: {
+                          stepSize: 1,
+                        },
+                        beginAtZero: true,
+                      },
+                    },
+                  }}
+                />
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Line data={timelineChartData} />
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
+        ))}
+      </Grid>
     </Box>
   );
 };
