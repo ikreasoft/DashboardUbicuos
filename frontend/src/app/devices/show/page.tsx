@@ -1,74 +1,118 @@
+// devices-dashboard.tsx
 "use client";
 
-import React from "react";
-import { useShow } from "@refinedev/react-hook-form";
-import { Show, Typography, Box } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
+import { useSearchParams } from "next/navigation";
 
-export default function ShowDevice() {
-  const { queryResult, isLoading } = useShow();
-  const record = queryResult?.data?.data;
+const DevicesDashboard: React.FC = () => {
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get("sessionId");
 
-  if (isLoading) {
+  const [devices, setDevices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [sessionInfo, setSessionInfo] = useState<any>(null);
+
+  useEffect(() => {
+    const loadDevices = async () => {
+      if (!sessionId) {
+        setError("No se proporcionó un ID de sesión.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const sessionURL = `http://localhost:4000/sessions/session/${sessionId}`;
+        const sessionResponse = await fetch(sessionURL);
+        if (!sessionResponse.ok) {
+          throw new Error(
+            `Error al obtener la información de la sesión: ${sessionResponse.status}`
+          );
+        }
+        const sessionData = await sessionResponse.json();
+        setSessionInfo(sessionData);
+
+        const devicesURL = `http://localhost:4000/sessions/data/${sessionId}`;
+        const devicesResponse = await fetch(devicesURL);
+        if (!devicesResponse.ok) {
+          throw new Error(
+            `Error al obtener los dispositivos: ${devicesResponse.status}`
+          );
+        }
+        const devicesData = await devicesResponse.json();
+        setDevices(devicesData);
+      } catch (err: any) {
+        setError(err.message || "Error al cargar los dispositivos.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDevices();
+  }, [sessionId]);
+
+  if (loading) {
     return (
       <Box sx={{ textAlign: "center", marginTop: 4 }}>
-        <Typography variant="h6">Cargando...</Typography>
+        <CircularProgress />
+        <Typography variant="h6">Cargando dispositivos...</Typography>
       </Box>
     );
   }
 
-  if (!record) {
+  if (error) {
     return (
-      <Box sx={{ textAlign: "center", marginTop: 4 }}>
-        <Typography variant="h6" color="error">
-          No se encontraron datos para este dispositivo.
-        </Typography>
-      </Box>
+      <Typography variant="h6" color="error" style={{ textAlign: "center" }}>
+        {error}
+      </Typography>
+    );
+  }
+
+  if (!devices.length || !sessionInfo) {
+    return (
+      <Typography variant="h6" style={{ textAlign: "center" }}>
+        No hay dispositivos disponibles.
+      </Typography>
     );
   }
 
   return (
-    <Show>
-      <Typography variant="h5" gutterBottom>
-        Detalles del Dispositivo
+    <Box sx={{ padding: 3 }}>
+      <Typography variant="h4" gutterBottom>
+        Dispositivos Activos
       </Typography>
-      <Box>
-        <Typography variant="body1">
-          <strong>Nombre: </strong>
-          {record.name}
-        </Typography>
-        <Typography variant="body1">
-          <strong>Ubicación: </strong>
-          {record.location}
-        </Typography>
-        <Typography variant="body1">
-          <strong>Tipo: </strong>
-          {record.type || "N/A"}
-        </Typography>
-        <Typography variant="body1">
-          <strong>Protocolo: </strong>
-          {record.protocol || "N/A"}
-        </Typography>
-        <Typography variant="body1">
-          <strong>Dirección IP: </strong>
-          {record.ipAddress || "N/A"}
-        </Typography>
-        <Typography variant="body1">
-          <strong>Dirección MAC: </strong>
-          {record.macAddress || "N/A"}
-        </Typography>
-        <Typography variant="body1">
-          <strong>Versión del Firmware: </strong>
-          {record.firmwareVersion || "N/A"}
-        </Typography>
-        <Typography variant="body1">
-          <strong>Resolución: </strong>
-          {record.resolution || "N/A"}
-        </Typography>
-        <Typography variant="body1">
-          <strong>URL de Transmisión: </strong>
-          {record.streamUrl || "N/A"}
-        </Typography>
+
+      <Box sx={{ marginBottom: 4 }}>
+        <Typography variant="h6">Usuario: {sessionInfo.user.fullname}</Typography>
+        <Typography variant="h6">Sujeto: {sessionInfo.subject}</Typography>
       </Box>
-    </Show>
+
+      <Grid container spacing={4}>
+        {devices.map((device: any, index: number) => (
+          <Grid item xs={12} md={6} lg={4} key={index}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Nombre: {device.name}</Typography>
+                <Typography>Ubicación: {device.location}</Typography>
+                <Typography>Protocolo: {device.protocol}</Typography>
+                <Typography>IP: {device.ipAddress}</Typography>
+                <Typography>Modelo: {device.model}</Typography>
+                <Typography>Estado: {device.isActive ? "Activo" : "Inactivo"}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
   );
-}
+};
+
+export default DevicesDashboard;

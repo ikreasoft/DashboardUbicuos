@@ -1,7 +1,7 @@
 "use client";
 
 import { GitHubBanner, Refine, type AuthProvider } from "@refinedev/core";
-import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
+import { RefineKbarProvider } from "@refinedev/kbar";
 import { notificationProvider, RefineSnackbarProvider } from "@refinedev/mui";
 import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
@@ -10,7 +10,7 @@ import React from "react";
 import routerProvider from "@refinedev/nextjs-router";
 
 import { ColorModeContextProvider } from "@contexts/color-mode";
-import { dataProvider } from "@providers/data-provider";
+import { dataProvider } from "@providers/data-provider"; // Asegúrate de que el archivo data-provider está bien exportado
 
 type RefineContextProps = {
   defaultMode?: string;
@@ -106,48 +106,33 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
       <RefineKbarProvider>
         <ColorModeContextProvider defaultMode={defaultMode}>
           <RefineSnackbarProvider>
-          <Refine
-  routerProvider={routerProvider}
-  dataProvider={dataProvider}
-  notificationProvider={notificationProvider}
-  authProvider={authProvider}
-  resources={[
-    {
-      name: "home",
-      list: "/home", 
-    },
-    {
-      name: "devices",
-      list: "/devices",
-      create: "/devices/create",
-      edit: "/devices/edit/:id",
-      show: "/devices/show/:id",
-      meta: { canDelete: true },
-    },
-    /*{
-      name: "categories",
-      list: "/categories",
-      create: "/categories/create",
-      edit: "/categories/edit/:id",
-      show: "/categories/show/:id",
-    },
-    {
-      name: "records",
-      list: "/records",
-      create: "/records/create",
-      edit: "/records/edit/:id",
-      show: "/records/show/:id",
-    },*/
-  ]}
-  options={{
-    syncWithLocation: true,
-    warnWhenUnsavedChanges: true,
-    useNewQueryKeys: true,
-  }}
->
-  {props.children}
-</Refine>
-
+            <Refine
+              routerProvider={routerProvider}
+              dataProvider={dataProvider} // Usa el dataProvider que hemos configurado
+              notificationProvider={notificationProvider}
+              authProvider={authProvider}
+              resources={[
+                {
+                  name: "home",
+                  list: "/home",
+                },
+                {
+                  name: "devices", // Configuración del recurso de dispositivos
+                  list: "/devices",
+                  create: "/devices/create",
+                  edit: "/devices/edit/:id",
+                  show: "/devices/show/:id",
+                  meta: { canDelete: true },
+                },
+              ]}
+              options={{
+                syncWithLocation: true,
+                warnWhenUnsavedChanges: true,
+                useNewQueryKeys: true,
+              }}
+            >
+              {props.children}
+            </Refine>
           </RefineSnackbarProvider>
         </ColorModeContextProvider>
       </RefineKbarProvider>

@@ -1,69 +1,281 @@
 "use client";
 
-import React from "react";
-import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import React, { useState, useEffect } from "react";
 import {
-  List,
-  useDataGrid,
-  EditButton,
-  ShowButton,
-  DeleteButton,
-  CreateButton,
-} from "@refinedev/mui";
-import { Box, Typography } from "@mui/material";
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  CircularProgress,
+  Chip,
+  CardMedia,
+  Collapse,
+  IconButton,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
+import {
+  ExpandMore as ExpandMoreIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+} from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
-export default function DevicesList() {
-  const { dataGridProps } = useDataGrid({
-    resource: "devices", // Recurso sincronizado con el backend
-    syncWithLocation: true, // Sincronización con la URL
-  });
+const API_URL = "http://localhost:4000";
 
-  // Mapeo de `_id` a `id` para que funcione con DataGrid
-  const rows = dataGridProps?.rows?.map((row) => ({
-    ...row,
-    id: row._id, // Mapea `_id` del backend a `id` esperado por DataGrid
-  })) || [];
+const DevicesPage: React.FC = () => {
+  const [devices, setDevices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deviceToDelete, setDeviceToDelete] = useState<any | null>(null);
+  const router = useRouter();
 
-  // Definición de columnas para la tabla
-  const columns = React.useMemo<GridColDef[]>(
-    () => [
-      { field: "id", headerName: "ID", type: "string", minWidth: 50, flex: 1 },
-      { field: "name", headerName: "Name", type: "string", minWidth: 150, flex: 1 },
-      { field: "location", headerName: "Location", type: "string", minWidth: 150, flex: 1 },
-      { field: "protocol", headerName: "Protocol", type: "string", minWidth: 100, flex: 1 },
-      { field: "ipAddress", headerName: "IP Address", type: "string", minWidth: 150, flex: 1 },
-      { field: "type", headerName: "Type", type: "string", minWidth: 100, flex: 1 },
-      {
-        field: "actions",
-        headerName: "Actions",
-        sortable: false,
-        renderCell: ({ row }) => (
-          <>
-            <EditButton hideText recordItemId={row.id} />
-            <ShowButton hideText recordItemId={row.id} />
-            <DeleteButton hideText recordItemId={row.id} />
-          </>
-        ),
-        align: "center",
-        headerAlign: "center",
-        minWidth: 150,
-      },
-    ],
-    [] // Dependencias vacías para evitar recrear columnas
-  );
+  useEffect(() => {
+    const fetchDevices = async () => {
+      try {
+        const response = await fetch(`${API_URL}/devices`);
+        if (!response.ok) {
+          throw new Error(`Error al obtener los dispositivos: ${response.status}`);
+        }
+        const data = await response.json();
+        setDevices(data);
+
+        const initialExpandedState = data.reduce(
+          (acc: Record<string, boolean>, device: any) => {
+            acc[device._id] = false;
+            return acc;
+          },
+          {}
+        );
+        setExpanded(initialExpandedState);
+      } catch (err: any) {
+        setError(err.message || "Error al cargar los dispositivos.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDevices();
+  }, []);
+
+  const toggleExpand = (id: string) => {
+    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const handleCreateDevice = () => {
+    router.push("/devices/create");
+  };
+
+  const handleEditDevice = (id: string) => {
+    router.push(`/devices/edit/${id}`);
+  };
+
+  const handleOpenDeleteDialog = (device: any) => {
+    setDeviceToDelete(device);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeviceToDelete(null);
+    setDeleteDialogOpen(false);
+  };
+
+  const handleDeleteDevice = async () => {
+    if (!deviceToDelete) return;
+
+    const resource = deviceToDelete.type === "Camera" ? "camera" : "sensor"; // Determina el tipo
+    const url = `${API_URL}/${resource}/${deviceToDelete._id}`; // Construye la URL
+    console.log("Eliminando desde:", url); // Log para confirmar la URL
+
+    try {
+        const response = await fetch(url, { method: "DELETE" });
+
+        if (!response.ok) {
+            const errorText = await response.text(); // Captura el texto de error
+            console.error("Contenido devuelto por el servidor:", errorText);
+            throw new Error(`Error al eliminar: ${response.status}`);
+        }
+
+        setDevices((prev) => prev.filter((d) => d._id !== deviceToDelete._id)); // Actualiza la lista
+        setDeleteDialogOpen(false);
+        alert("Dispositivo eliminado con éxito.");
+    } catch (err: any) {
+        console.error("Error al eliminar:", err.message);
+        alert(err.message || "Hubo un error al eliminar el dispositivo.");
+    }
+};
+
+  const getImageForDevice = (type: string) => {
+    const images: Record<string, string> = {
+      Camera: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSQGZ_TH21-actv6toe58nxo6tsg_iOtI5kg&s",
+      Humidity: "https://www.matecmedicion.com.ar/wp-content/uploads/2021/12/EE210_Gruppe_RGB_300dpi-2-335x335.jpg",
+      Default: "https://via.placeholder.com/150?text=Device",
+    };
+    return images[type] || images["Default"];
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ textAlign: "center", marginTop: 4 }}>
+        <CircularProgress />
+        <Typography variant="h6">Cargando dispositivos...</Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Typography variant="h6" color="error" style={{ textAlign: "center" }}>
+        {error}
+      </Typography>
+    );
+  }
+
+  if (!devices.length) {
+    return (
+      <Typography variant="h6" style={{ textAlign: "center" }}>
+        No hay dispositivos disponibles.
+      </Typography>
+    );
+  }
 
   return (
-    <Box sx={{ padding: 2 }}>
-      <Typography variant="h4" gutterBottom>
-        Lista de Dispositivos
-      </Typography>
-      <Box sx={{ marginBottom: 2, textAlign: "right" }}>
-        <CreateButton />
+    <Box sx={{ padding: 3 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 4,
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Lista de Dispositivos
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleCreateDevice}
+        >
+          Crear Nuevo Dispositivo
+        </Button>
       </Box>
-      <List>
-        {/* DataGrid para listar los dispositivos */}
-        <DataGrid {...dataGridProps} rows={rows} columns={columns} autoHeight />
-      </List>
+
+      <Grid container spacing={4}>
+        {devices.map((device: any) => (
+          <Grid item xs={12} md={6} lg={4} key={device._id}>
+            <Card>
+              <CardMedia
+                component="img"
+                height="140"
+                image={device.imageUrl || getImageForDevice(device.type)}
+                alt={device.name}
+              />
+              <CardContent>
+                <Typography variant="h6">{device.name}</Typography>
+                <Typography>
+                  Estado:{" "}
+                  <Chip
+                    label={device.isActive ? "Activo" : "Inactivo"}
+                    sx={{
+                      backgroundColor: device.isActive ? "green" : "red",
+                      color: "white",
+                    }}
+                  />
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginTop: 2,
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<EditIcon />}
+                    onClick={() => handleEditDevice(device._id)}
+                  >
+                    Editar
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    startIcon={<DeleteIcon />}
+                    onClick={() => handleOpenDeleteDialog(device)}
+                  >
+                    Eliminar
+                  </Button>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginTop: 2,
+                  }}
+                >
+                  <Typography variant="body2" sx={{ cursor: "pointer" }}>
+                    Más información
+                  </Typography>
+                  <IconButton
+                    onClick={() => toggleExpand(device._id)}
+                    aria-expanded={expanded[device._id]}
+                    aria-label="mostrar más"
+                  >
+                    <ExpandMoreIcon />
+                  </IconButton>
+                </Box>
+                <Collapse in={expanded[device._id]} timeout="auto" unmountOnExit>
+                  <Box sx={{ marginTop: 2 }}>
+                    {device.type && <Typography>Tipo: {device.type}</Typography>}
+                    {device.location && <Typography>Ubicación: {device.location}</Typography>}
+                    {device.ipAddress && <Typography>IP: {device.ipAddress}</Typography>}
+                    {device.macAddress && <Typography>MAC: {device.macAddress}</Typography>}
+                    {device.model && <Typography>Modelo: {device.model}</Typography>}
+                    {device.firmwareVersion && (
+                      <Typography>Firmware: {device.firmwareVersion}</Typography>
+                    )}
+                    {device.lastConnection && (
+                      <Typography>
+                        Última Conexión: {new Date(device.lastConnection).toLocaleString()}
+                      </Typography>
+                    )}
+                  </Box>
+                </Collapse>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Dialogo de confirmación para eliminar */}
+      <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Confirmar eliminación</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            ¿Estás seguro de que deseas eliminar el dispositivo{" "}
+            <strong>{deviceToDelete?.name}</strong>?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleDeleteDevice} color="secondary">
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
-}
+};
+
+export default DevicesPage;

@@ -4,128 +4,186 @@ var router = express.Router();
 var Camera = require("../models/Camera.js");
 var Model = require("../models/Model.js");
 var Sensor = require("../models/Sensor.js");
+
 mongoose.set("strictQuery", false);
-var { verificarToken } = require("../auxiliar/seguridad.js");
-var db = mongoose.connection;
+
+// Middleware para manejar errores generales
+function manejarErrores(res, err) {
+    console.error("Error:", err);
+    res.status(500).json({ error: err.message });
+}
+
+// Ruta principal para obtener dispositivos
 router.get("/", function (req, res) {
     const tipo = req.query.type;
     var filtro = req.query;
-    if (tipo == undefined || tipo == 'Camera')
-        // Returns all devices Camera and Sensor
-        Camera.find(filtro).then(function (cameras) {
-            res.status(200).json(cameras)
-        }).catch(function (err) {
-            res.status(500).send(err)
-        });
-    else
-        Sensor.find({ type: tipo }).then(function (sensores) {
-            res.status(200).json(sensores)
-        }).catch(function (err) {
-            res.status(500).send(err)
-        });
-});
 
-// #region cameras
-router.get("/camera/:id", function (req, res) {
-    Camera.findById(req.params.id).then(function (camera) {
-        res.status(200).json(camera)
-    }).catch(function (err) {
-        res.status(500).send(err)
-    });
-});
-
-router.post("/camera", function (req, res) {
-    Camera.create(req.body).then(function (camera) {
-        res.status(200).json(camera)
-    }).catch(function (err) {
-        res.status(500).send(err)
-    });
-});
-
-router.put("/camera/:id", function (req, res) {
-    Camera.findByIdAndUpdate(req.params.id, req.body).then(function (err, camera) {
-        if (err)
-            res.status(500).send(err)
-        else
-            res.status(200).json(camera)
-    });
-});
-
-router.delete("/camera/:id", function (req, res) {
-    Camera.findByIdAndDelete(req.params.id).then(function (camera) {
-        res.status(200).json(camera)
-    }).catch(function (err) {
-        res.status(500).send(err)
-    });
-});
-// #endregion
-
-// #region modelos
-router.get("/models", function (req, res) {
-    Model.find().then(function (models) {
-        res.status(200).json(models)
-    }).catch(function (err) {
-        res.status(500).send(err)
-    });
-});
-
-router.get("/model/:id", function (req, res) {
-    Model.findById(req.params.id).then(function (model) {
-        res.status(200).json(model)
+    if (!tipo || tipo === "Camera") {
+        Camera.find(filtro)
+            .then((cameras) => res.status(200).json(cameras))
+            .catch((err) => manejarErrores(res, err));
+    } else {
+        Sensor.find({ type: tipo })
+            .then((sensores) => res.status(200).json(sensores))
+            .catch((err) => manejarErrores(res, err));
     }
-    ).catch(function (err) {
-        res.status(500).send(err)
+});
+
+// #region Cameras
+router.get("/camera/:id", async (req, res) => {
+    try {
+        const camera = await Camera.findById(req.params.id);
+        if (!camera) {
+            return res.status(404).json({ error: "Cámara no encontrada" });
+        }
+        res.status(200).json(camera);
+    } catch (err) {
+        manejarErrores(res, err);
     }
-    );
 });
 
-router.post("/model", function (req, res) {
-    var model = new Model(req.body);
-    model.save().then(function (model) {
-        res.status(201).json(model)
-    }).catch(function (err) {
-        res.status(500).send(err)
-    });
+router.post("/camera", async (req, res) => {
+    try {
+        const camera = await Camera.create(req.body);
+        res.status(201).json(camera);
+    } catch (err) {
+        manejarErrores(res, err);
+    }
 });
 
-router.put("/model/:id", function (req, res) {
-    Model.findByIdAndUpdate(req.params.id, req.body, { new: true }).then(function (model) {
-        res.status(200).json(model)
-    }).catch(function (err) {
-        res.status(500).send(err)
-    });
+router.put("/camera/:id", async (req, res) => {
+    try {
+        const camera = await Camera.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!camera) {
+            return res.status(404).json({ error: "Cámara no encontrada" });
+        }
+        res.status(200).json(camera);
+    } catch (err) {
+        manejarErrores(res, err);
+    }
 });
 
-router.delete("/model/:id", function (req, res) {
-    Model.findByIdAndDelete(req.params.id).then(function (model) {
-        res.status(200).json(model)
-    }).catch(function (err) {
-        res.status(500).send(err)
-    });
+router.delete("/camera/:id", async (req, res) => {
+    console.log("Intentando eliminar cámara con ID:", req.params.id);
+    try {
+        const camera = await Camera.findByIdAndDelete(req.params.id);
+        if (!camera) {
+            console.log("Cámara no encontrada.");
+            return res.status(404).json({ error: "Cámara no encontrada" });
+        }
+        console.log("Cámara eliminada con éxito:", camera);
+        res.status(200).json({ message: "Cámara eliminada con éxito", camera });
+    } catch (err) {
+        manejarErrores(res, err);
+    }
 });
 // #endregion
 
-// #region sensors
-router.post("/sensor", function (req, res) {
-    Sensor.create(req.body).then(function (sensor) {
-        res.status(200).json(sensor)
-    }).catch(function (err) {
-        res.status(500).send(err)
-    });
+// #region Models
+router.get("/models", async (req, res) => {
+    try {
+        const models = await Model.find();
+        res.status(200).json(models);
+    } catch (err) {
+        manejarErrores(res, err);
+    }
 });
-router.put("/sensor/:id", function (req, res) {
-    Sensor.findByIdAndUpdate(req.params.id, req.body).then(function (sensor) {
-        res.status(200).json(sensor)
-    }).catch(function (err) {
-        res.status(500).send(err)
-    });
+
+router.get("/model/:id", async (req, res) => {
+    try {
+        const model = await Model.findById(req.params.id);
+        if (!model) {
+            return res.status(404).json({ error: "Modelo no encontrado" });
+        }
+        res.status(200).json(model);
+    } catch (err) {
+        manejarErrores(res, err);
+    }
 });
-router.delete("/sensor/:id", function (req, res) {
-    Sensor.findByIdAndDelete(req.params.id).then(function (sensor) {
-        res.status(200).json(sensor)
-    }).catch(function (err) {
-        res.status(500).send(err)
-    });
+
+router.post("/model", async (req, res) => {
+    try {
+        const model = await Model.create(req.body);
+        res.status(201).json(model);
+    } catch (err) {
+        manejarErrores(res, err);
+    }
+});
+
+router.put("/model/:id", async (req, res) => {
+    try {
+        const model = await Model.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!model) {
+            return res.status(404).json({ error: "Modelo no encontrado" });
+        }
+        res.status(200).json(model);
+    } catch (err) {
+        manejarErrores(res, err);
+    }
+});
+
+router.delete("/model/:id", async (req, res) => {
+    try {
+        const model = await Model.findByIdAndDelete(req.params.id);
+        if (!model) {
+            return res.status(404).json({ error: "Modelo no encontrado" });
+        }
+        res.status(200).json({ message: "Modelo eliminado con éxito", model });
+    } catch (err) {
+        manejarErrores(res, err);
+    }
 });
 // #endregion
+
+// #region Sensors
+router.get("/sensor/:id", async (req, res) => {
+    try {
+        const sensor = await Sensor.findById(req.params.id);
+        if (!sensor) {
+            return res.status(404).json({ error: "Sensor no encontrado" });
+        }
+        res.status(200).json(sensor);
+    } catch (err) {
+        manejarErrores(res, err);
+    }
+});
+
+router.post("/sensor", async (req, res) => {
+    try {
+        const sensor = await Sensor.create(req.body);
+        res.status(201).json(sensor);
+    } catch (err) {
+        manejarErrores(res, err);
+    }
+});
+
+router.put("/sensor/:id", async (req, res) => {
+    try {
+        const sensor = await Sensor.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!sensor) {
+            return res.status(404).json({ error: "Sensor no encontrado" });
+        }
+        res.status(200).json(sensor);
+    } catch (err) {
+        manejarErrores(res, err);
+    }
+});
+
+router.delete("/sensor/:id", async (req, res) => {
+    console.log("Intentando eliminar sensor con ID:", req.params.id); // Log para verificar el ID recibido
+    try {
+        const sensor = await Sensor.findByIdAndDelete(req.params.id);
+        if (!sensor) {
+            console.log("Sensor no encontrado.");
+            return res.status(404).json({ error: "Sensor no encontrado" });
+        }
+        console.log("Sensor eliminado con éxito:", sensor);
+        res.status(200).json({ message: "Sensor eliminado con éxito", sensor });
+    } catch (err) {
+        console.error("Error al eliminar sensor:", err);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+});
+// #endregion
+
 module.exports = router;
