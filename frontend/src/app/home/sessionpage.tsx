@@ -2,7 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Button, Typography, CircularProgress, Grid, Card, CardContent } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  CircularProgress,
+  Grid,
+  Card,
+  CardContent,
+} from "@mui/material";
 
 const API_URL = "http://localhost:4000/sessions";
 
@@ -30,19 +38,40 @@ const SessionPage = () => {
     fetchSessions();
   }, []);
 
-const handleViewDashboard = (sessionId: string) => {
-  console.log("Redirigiendo al dashboard con sessionId:", sessionId); // Log para confirmar el sessionId
-  router.push(`/home/dashboard?sessionId=${sessionId}`);
-};
+  const handleViewDashboard = (sessionId: string) => {
+    console.log("Redirigiendo al dashboard con sessionId:", sessionId);
+    router.push(`/home/dashboard?sessionId=${sessionId}`);
+  };
+
+  const handleCreateSession = () => {
+    console.log("Redirigiendo a crear nueva sesión");
+    router.push("/home/create");
+  };
 
   if (loading) return <CircularProgress />;
 
   return (
     <Box sx={{ padding: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Sesiones
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 3,
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Sesiones
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleCreateSession}
+        >
+          Crear Nueva Sesión
+        </Button>
+      </Box>
 
-      </Typography>
       <Grid container spacing={2}>
         {sessions.map((session) => (
           <Grid item xs={12} sm={6} md={4} key={session._id}>
