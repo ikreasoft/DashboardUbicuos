@@ -6,25 +6,43 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { useLogin } from "@refinedev/core";
+import Link from "next/link";
+
+const API_URL = "http://localhost:4000/users"; // Asegúrate de que coincida con tu backend
 
 export default function Login() {
-  const { mutate: login } = useLogin();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
     if (!email || !password) {
-      setError("Please enter both email and password.");
+      setError("Por favor ingresa correo y contraseña.");
       return;
     }
 
     try {
-      // Llama al login con email y contraseña
-      await login({ email, password });
+      const response = await fetch(`${API_URL}/signin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Correo o contraseña inválidos.");
+      }
+
+      const { token } = await response.json();
+      localStorage.setItem("token", token); // Guarda el token en localStorage
+      setError(""); // Limpia cualquier mensaje de error previo
+
+      // Redirigir al dashboard o página principal
+      window.location.href = "/home"; 
     } catch (err: any) {
-      setError("Invalid email or password.");
+      setError(err.message || "Error al iniciar sesión.");
     }
   };
 
@@ -45,7 +63,7 @@ export default function Login() {
         width="300px"
       >
         <Typography variant="h4" align="center">
-          Login
+          Iniciar Sesión
         </Typography>
 
         {/* Campo de Correo */}
@@ -60,7 +78,7 @@ export default function Login() {
 
         {/* Campo de Contraseña */}
         <TextField
-          label="Password"
+          label="Contraseña"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -70,25 +88,23 @@ export default function Login() {
 
         {/* Botón para Login */}
         <Button variant="contained" size="large" fullWidth onClick={handleLogin}>
-          Sign in
+          Iniciar Sesión
         </Button>
 
-        {/* Muestra errores */}
+        {/* Mostrar errores */}
         {error && (
           <Typography color="error" align="center">
             {error}
           </Typography>
         )}
 
-        {/* Botón para Login con Google */}
-        <Button
-          style={{ width: "100%", marginTop: "12px" }}
-          variant="outlined"
-          size="large"
-          onClick={() => login({ provider: "google" })}
-        >
-          Sign in with Google
-        </Button>
+        {/* Enlace para ir a la página de registro */}
+        <Typography align="center">
+          ¿No tienes una cuenta?{" "}
+          <Link href="/register" style={{ color: "#1976d2", textDecoration: "none" }}>
+            Regístrate aquí
+          </Link>
+        </Typography>
       </Box>
     </Container>
   );

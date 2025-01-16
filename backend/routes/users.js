@@ -1,83 +1,69 @@
-var express = require("express");
-var mongoose = require("mongoose");
-var router = express.Router();
-var User = require("../models/User.js");
-var Role = require("../models/Role.js");
-var { verificarToken } = require("../auxiliar/seguridad.js");
-var { auditar } = require("../auxiliar/auditoria.js");
-var jwt = require("jsonwebtoken");
-const dotenv = require('dotenv');
+const express = require("express");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User.js");
+const router = express.Router();
+const dotenv = require("dotenv");
+
 dotenv.config();
 
-var db = mongoose.connection;
-// Only for admin users
-router.get("/",verificarToken, function (req, res) {
-    console.log("GET /users");
-    User.find().then(function (users) {
-        res.status(200).json(users)
-    }).catch(function (err) {
-        res.status(500).send(err)
-    });
-});
+const TOKEN_SECRET = process.env.TOKEN_SECRET || "default_secret";
 
-router.post("/signin", 
-    function (req, res, next) {
-        //debug("login");
-            User.findOne({
-                username: req.body.username
-            }, function (err, user) {
-                if (err) { //error al consultar la BBDD
-                    res.status(500).send("¡Error comprobando el usuario!");
-                }
-                if (user != null) { //El usuario existe (ahora a ver si coincide el password)
-                    //debug("El usuario existe");
-                    user.comparePassword(req.body.password, 
-                         function (err, isMatch) {
-                              if (err) res.status(500).send("¡Error comprobando el password!");
-                              if (isMatch){  
-                                    next(); //pasamos a generar el token
-                              }else
-                                    res.status(401).send({
-                                       message: "Password no coincide"
-                              });    
-                        }
-                    );
-                }
-                else { //El usuario NO existe en la base de datos
-                    res.status(401).send({
-                        message: "Usuario no existe"
-                    });
-                }
-            });
-    },
-    function (req, res, next) {
-        //debug("... generando token");
-        jwt.sign({username: req.body.username},process.env.TOKEN_SECRET, {expiresIn: 24*3600 // expira en 1 hora...
-        }, function(err, generatedToken) {
-            if (err) res.status(500).send("¡Error generando token de autenticación");
-            else {
-                auditar(req.body.username, "Ha iniciado sesión");
-                res.status(200).send({message: generatedToken});
-        }
-        });
-    });
+// Endpoint para registrar un usuario
+router.post("/register", async (req, res) => {
+  const { email, password, username, fullname } = req.body;
 
-router.get("/roles",verificarToken, function (req, res) {
-    Role.find().then(function (roles) {
-        res.status(200).json(roles)
-    }).catch(function (err) {
-        res.status(500).send(err)
+  if (!email || !password || !username || !fullname) {
+    return res.status(400).json({ message: "Todos los campos son requeridos" });
+  }
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "El correo ya está registrado" });
     }
-    );
-});
-router.get("/:id",verificarToken, function (req, res) {
-    User.findById(req.params.id).then(function (user) {
-        res.status(200).json(user)
-    }).catch(function (err) {
-        res.status(500).send(err)
+
+    // Crear nuevo usuario
+    const user = new User({
+      email,
+      password,
+      username,
+      fullname,
+      role: "user", // Rol predeterminado
     });
+
+    await user.save();
+    res.status(201).json({ message: "Usuario registrado exitosamente" });
+  } catch (err) {
+    console.error("Error en el registro:", err);
+    res.status(500).json({ message: "Error en el servidor", error: err.message });
+  }
 });
 
+// Endpoint para inicio de sesión
+router.post("/signin", async (req, res) => {
+  const { email, password } = req.body;
 
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email y contraseña son requeridos" });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "Usuario no encontrado" });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Contraseña incorrecta" });
+    }
+
+    const token = jwt.sign({ id: user._id, email: user.email }, TOKEN_SECRET, { expiresIn: "24h" });
+    res.status(200).json({ token });
+  } catch (err) {
+    console.error("Error en el inicio de sesión:", err);
+    res.status(500).json({ message: "Error en el servidor", error: err.message });
+  }
+});
 
 module.exports = router;

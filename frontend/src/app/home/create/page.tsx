@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -11,33 +11,48 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 
-const API_URL = "http://localhost:4000/sessions";
+const API_URL = "http://localhost:4000";
 
-// Define explícitamente el tipo de los datos del formulario
 type FormDataType = {
   subject: string;
   user: string;
-  devices: string[]; // Aquí definimos que "devices" es un array de strings
+  devices: string[];
 };
 
 const CreateSessionPage = () => {
   const [formData, setFormData] = useState<FormDataType>({
     subject: "",
     user: "",
-    devices: [], // Inicializamos devices como un array vacío
+    devices: [],
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [users, setUsers] = useState<{ fullname: string; _id: string }[]>([]);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(`${API_URL}/users`);
+        if (!response.ok) throw new Error("Error al obtener los usuarios");
+
+        const data = await response.json();
+        setUsers(data); // Asume que el backend devuelve [{ fullname, _id }]
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    // Maneja los dispositivos separando los IDs por comas
     if (name === "devices") {
       setFormData((prev) => ({
         ...prev,
-        devices: value.split(",").map((device) => device.trim()), // Elimina espacios adicionales
+        devices: value.split(",").map((device) => device.trim()),
       }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -47,20 +62,28 @@ const CreateSessionPage = () => {
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
+
+    // Encuentra el ObjectId del usuario basado en el nombre ingresado
+    const user = users.find((u) => u.fullname === formData.user);
+    if (!user) {
+      setError("Usuario no encontrado");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${API_URL}/sessions/session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, user: user._id }),
       });
 
       if (!response.ok) {
         throw new Error("Error al crear la sesión");
       }
 
-      // Redirige de vuelta a la lista de sesiones
       router.push("/home");
     } catch (err: any) {
       setError(err.message);
@@ -90,11 +113,12 @@ const CreateSessionPage = () => {
         <Grid item xs={12}>
           <TextField
             fullWidth
-            label="Usuario"
+            label="Usuario (nombre completo)"
             name="user"
             value={formData.user}
             onChange={handleInputChange}
             variant="outlined"
+            helperText="Asegúrate de que el nombre coincida con uno existente"
           />
         </Grid>
 
@@ -103,7 +127,7 @@ const CreateSessionPage = () => {
             fullWidth
             label="Dispositivos (IDs separados por comas)"
             name="devices"
-            value={formData.devices.join(", ")} // Muestra los dispositivos como una cadena
+            value={formData.devices.join(", ")}
             onChange={handleInputChange}
             variant="outlined"
           />

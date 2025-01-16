@@ -1,71 +1,94 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-//var debug = require("debug")("moviesAppAuth:server");
+var express = require("express");
+var mongoose = require("mongoose");
+var router = express.Router();
+var User = require("../models/User.js");
+var jwt = require("jsonwebtoken");
+var { OAuth2Client } = require("google-auth-library");
+const dotenv = require("dotenv");
+dotenv.config();
 
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-//Para la encriptación del password
-var bcrypt = require("bcryptjs");
+// Conexión con la base de datos
+var db = mongoose.connection;
 
-var SALT_WORK_FACTOR = 10;
+// Endpoint para obtener usuarios (Solo administradores)
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: "Error al obtener usuarios", error: err });
+  }
+});
 
-var UserSchema = new Schema({
-    username: {
-        type: String,
-        required: true,
-        index: {
-            unique: true
-        }
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    fullname: String,
-    email: {
-        type: String,
-        required: true
-    },
-    role: {
-        type: String,
-        required: true
-    },
-    lastLogin: Date,
-    creationdate: {
-        type: Date,
-        default: Date.now
-    },
-    Preferences: {
-        favoriteColor: String
+// Endpoint para inicio de sesión con usuario y contraseña
+router.post("/signin", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email y contraseña son requeridos" });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({ message: "Usuario no encontrado" });
     }
+
+    const isMatch = await user.comparePassword(password); // Método definido en el modelo User
+    if (!isMatch) {
+      return res.status(401).json({ message: "Contraseña incorrecta" });
+    }
+
+    const token = jwt.sign({ id: user._id, email: user.email }, process.env.TOKEN_SECRET, {
+      expiresIn: "24h",
+    });
+
+    res.status(200).json({ token });
+  } catch (err) {
+    res.status(500).json({ message: "Error en el servidor", error: err });
+  }
 });
 
-/* El pre middleware se ejecuta antes de que suceda la operacion. 
-Por ejemplo, un middleware pre-save sera ejecutado antes de salvar 
-el documento.  */
+// Endpoint para inicio de sesión con Google OAuth
+router.post("/signin/google", async (req, res) => {
+  const { token } = req.body;
 
-UserSchema.pre("save", function (next) {
-    var user = this;
-    //debug("En middleware pre (save)...");
-    // solo aplica una función hash al password si ha sido modificado (o es nuevo)
-    if (!user.isModified("password")) return next();
-    // genera la salt
-    bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
-        if (err) return next(err);
-        // aplica una función hash al password usando la nueva salt
-        bcrypt.hash(user.password, salt, function (err, hash) {
-            if (err) return next(err);
-            // sobrescribe el password escrito con el “hasheado”
-            user.password = hash;
-            next();
-        });
+  if (!token) {
+    return res.status(400).json({ message: "El token es requerido" });
+  }
+
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
+
+    const payload = ticket.getPayload();
+    const { sub: googleId, email, name } = payload;
+
+    let user = await User.findOne({ googleId });
+    if (!user) {
+      user = await User.create({
+        googleId,
+        email,
+        fullname: name,
+        username: email,
+        role: "user",
+      });
+    }
+
+    const jwtToken = jwt.sign({ id: user._id, email: user.email }, process.env.TOKEN_SECRET, {
+      expiresIn: "24h",
+    });
+
+    res.status(200).json({ token: jwtToken });
+  } catch (err) {
+    console.error("Error en el inicio de sesión con Google:", err);
+    res.status(401).json({ message: "Token de Google inválido", error: err });
+  }
 });
 
-UserSchema.methods.comparePassword = function (candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
-        if (err) return cb(err);
-        cb(null, isMatch);
-    });
-};
-
-module.exports = mongoose.model('User', UserSchema);
+module.exports = router;

@@ -6,23 +6,28 @@ import { notificationProvider, RefineSnackbarProvider } from "@refinedev/mui";
 import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import routerProvider from "@refinedev/nextjs-router";
 
 import { ColorModeContextProvider } from "@contexts/color-mode";
-import { dataProvider } from "@providers/data-provider"; // Asegúrate de que el archivo data-provider está bien exportado
+import { dataProvider } from "@providers/data-provider";
 
 type RefineContextProps = {
   defaultMode?: string;
 };
 
+const clientId = "TU_CLIENT_ID_DE_GOOGLE"; // Reemplaza esto con tu Client ID de Google
+
 export const RefineContext = (
   props: React.PropsWithChildren<RefineContextProps>
 ) => {
   return (
-    <SessionProvider>
-      <App {...props} />
-    </SessionProvider>
+    <GoogleOAuthProvider clientId={clientId}>
+      <SessionProvider>
+        <App {...props} />
+      </SessionProvider>
+    </GoogleOAuthProvider>
   );
 };
 
@@ -32,7 +37,7 @@ type AppProps = {
 
 const App = (props: React.PropsWithChildren<AppProps>) => {
   const { data, status } = useSession();
-  const to = usePathname();
+  const currentPath = usePathname();
 
   if (status === "loading") {
     return <span>loading...</span>;
@@ -41,7 +46,7 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
   const authProvider: AuthProvider = {
     login: async () => {
       signIn("google", {
-        callbackUrl: to ? to.toString() : "/",
+        callbackUrl: currentPath ? currentPath.toString() : "/",
         redirect: true,
       });
 
@@ -71,6 +76,12 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
       };
     },
     check: async () => {
+      // Permitir acceso a "/register" incluso si no hay sesión
+      if (currentPath === "/register") {
+        return { authenticated: true };
+      }
+
+      // Bloquear el resto de las rutas si no hay sesión activa
       if (status === "unauthenticated") {
         return {
           authenticated: false,
@@ -78,9 +89,7 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
         };
       }
 
-      return {
-        authenticated: true,
-      };
+      return { authenticated: true };
     },
     getPermissions: async () => {
       return null;
@@ -108,7 +117,7 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
           <RefineSnackbarProvider>
             <Refine
               routerProvider={routerProvider}
-              dataProvider={dataProvider} // Usa el dataProvider que hemos configurado
+              dataProvider={dataProvider}
               notificationProvider={notificationProvider}
               authProvider={authProvider}
               resources={[
@@ -117,7 +126,7 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
                   list: "/home",
                 },
                 {
-                  name: "devices", // Configuración del recurso de dispositivos
+                  name: "devices",
                   list: "/devices",
                   create: "/devices/create",
                   edit: "/devices/edit/:id",
