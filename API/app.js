@@ -13,7 +13,7 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 
-const fullURI = "mongodb+srv://chunche95:5pGcOFYhRt0BBk45@cluster0.jq2rb.mongodb.net/iotDB" || "mongodb://localhost:27017/labdb";
+const fullURI = "mongodb+srv://chunche95:5pGcOFYhRt0BBk45@cluster0.jq2rb.mongodb.net/iotDB" || "mongodb://mongo:27017/labdb";
 mongoose
   .connect(fullURI,
     { useNewUrlParser: true, useUnifiedTopology: true }
