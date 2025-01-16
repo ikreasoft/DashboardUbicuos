@@ -11,38 +11,57 @@ import Link from "next/link";
 const API_URL = "http://localhost:4000/users"; // Asegúrate de que coincida con tu backend
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Agregado para manejar estados de carga
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      setError("Por favor ingresa correo y contraseña.");
+    if (!username || !password) {
+      setError("Por favor ingresa usuario y contraseña.");
+      console.error("Error: Faltan datos (username o password).");
       return;
     }
 
+    setLoading(true); // Activar estado de carga
+    setError(""); // Limpiar errores previos
+
     try {
+      console.log("Enviando datos al backend:", { username, password });
+
       const response = await fetch(`${API_URL}/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
+
+      console.log("Respuesta del backend recibida:", response);
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Correo o contraseña inválidos.");
+        console.error("Error recibido del backend:", data);
+        throw new Error(data.message || "Usuario o contraseña inválidos.");
       }
 
       const { token } = await response.json();
-      localStorage.setItem("token", token); // Guarda el token en localStorage
-      setError(""); // Limpia cualquier mensaje de error previo
+      console.log("Token recibido:", token);
 
-      // Redirigir al dashboard o página principal
-      window.location.href = "/home"; 
-    } catch (err: any) {
-      setError(err.message || "Error al iniciar sesión.");
+      if (!token) {
+        throw new Error("No se recibió un token válido.");
+      }
+
+      // Guardar el token en localStorage
+      localStorage.setItem("token", token);
+
+      console.log("Token guardado en localStorage. Redirigiendo...");
+      window.location.href = "/home"; // Redirigir al dashboard
+    } catch (err) {
+      console.error("Error durante el inicio de sesión:", err);
+      setError(err instanceof Error ? err.message : "Error desconocido al iniciar sesión.");
+    } finally {
+      setLoading(false); // Desactivar estado de carga
     }
   };
 
@@ -66,14 +85,14 @@ export default function Login() {
           Iniciar Sesión
         </Typography>
 
-        {/* Campo de Correo */}
+        {/* Campo de Usuario */}
         <TextField
-          label="Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          label="Usuario"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           fullWidth
           required
+          disabled={loading} // Deshabilitar durante la carga
         />
 
         {/* Campo de Contraseña */}
@@ -84,11 +103,18 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
           fullWidth
           required
+          disabled={loading} // Deshabilitar durante la carga
         />
 
         {/* Botón para Login */}
-        <Button variant="contained" size="large" fullWidth onClick={handleLogin}>
-          Iniciar Sesión
+        <Button
+          variant="contained"
+          size="large"
+          fullWidth
+          onClick={handleLogin}
+          disabled={loading} // Deshabilitar durante la carga
+        >
+          {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
         </Button>
 
         {/* Mostrar errores */}

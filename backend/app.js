@@ -14,8 +14,7 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 // Ruta de conexión a MongoDB original
 const fullURI =
-  "mongodb+srv://chunche95:5pGcOFYhRt0BBk45@cluster0.jq2rb.mongodb.net/iotDB" ||
-  "mongodb://localhost:27017/labdb";
+  "mongodb+srv://chunche95:5pGcOFYhRt0BBk45@cluster0.jq2rb.mongodb.net/iotDB";
 
 // Configuración de conexión con Mongoose
 mongoose.set("strictQuery", true);
@@ -37,6 +36,8 @@ const recordRouter = require("./routes/record");
 const usersRouter = require("./routes/users");
 const rolesRouter = require("./routes/roles");
 const sessionsRouter = require("./routes/sessions");
+const dotenv = require("dotenv");
+dotenv.config();
 
 app.use("/", indexRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));

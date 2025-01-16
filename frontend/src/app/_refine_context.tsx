@@ -1,12 +1,15 @@
 "use client";
 
-import { GitHubBanner, Refine, type AuthProvider } from "@refinedev/core";
+import {
+  GitHubBanner,
+  Refine,
+  type AuthProvider,
+  OnErrorResponse,
+} from "@refinedev/core";
 import { RefineKbarProvider } from "@refinedev/kbar";
 import { notificationProvider, RefineSnackbarProvider } from "@refinedev/mui";
-import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import routerProvider from "@refinedev/nextjs-router";
 
@@ -17,18 +20,10 @@ type RefineContextProps = {
   defaultMode?: string;
 };
 
-const clientId = "TU_CLIENT_ID_DE_GOOGLE"; // Reemplaza esto con tu Client ID de Google
-
 export const RefineContext = (
   props: React.PropsWithChildren<RefineContextProps>
 ) => {
-  return (
-    <GoogleOAuthProvider clientId={clientId}>
-      <SessionProvider>
-        <App {...props} />
-      </SessionProvider>
-    </GoogleOAuthProvider>
-  );
+  return <App {...props} />;
 };
 
 type AppProps = {
@@ -36,74 +31,123 @@ type AppProps = {
 };
 
 const App = (props: React.PropsWithChildren<AppProps>) => {
-  const { data, status } = useSession();
   const currentPath = usePathname();
 
-  if (status === "loading") {
-    return <span>loading...</span>;
-  }
-
   const authProvider: AuthProvider = {
-    login: async () => {
-      signIn("google", {
-        callbackUrl: currentPath ? currentPath.toString() : "/",
-        redirect: true,
-      });
+    login: async ({ username, password }: { username: string; password: string }) => {
+      try {
+        const response = await fetch("http://localhost:4000/users/signin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+        });
 
-      return {
-        success: true,
-      };
-    },
-    logout: async () => {
-      signOut({
-        redirect: true,
-        callbackUrl: "/login",
-      });
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.message || "Usuario o contraseña inválidos.");
+        }
 
-      return {
-        success: true,
-      };
-    },
-    onError: async (error) => {
-      if (error.response?.status === 401) {
+        const { token } = await response.json();
+
+        // Almacenar el token en localStorage
+        localStorage.setItem("token", token);
+
+        console.log("Inicio de sesión exitoso. Redirigiendo al home...");
         return {
-          logout: true,
+          success: true,
+          redirectTo: "/home", // Redirigir a la página principal tras login exitoso
+        };
+      } catch (error) {
+        console.error("Error al iniciar sesión:", error);
+
+        return {
+          success: false,
+          error: error instanceof Error ? error : new Error("Error al iniciar sesión"),
         };
       }
+    },
+
+    logout: async () => {
+      localStorage.removeItem("token");
+      console.log("Sesión cerrada. Redirigiendo al login...");
 
       return {
-        error,
+        success: true,
+        redirectTo: "/login", // Redirigir al login tras logout
       };
     },
-    check: async () => {
-      // Permitir acceso a "/register" incluso si no hay sesión
-      if (currentPath === "/register") {
-        return { authenticated: true };
-      }
 
-      // Bloquear el resto de las rutas si no hay sesión activa
-      if (status === "unauthenticated") {
+    check: async () => {
+      const token = localStorage.getItem("token");
+      console.log("Token encontrado en localStorage:", token);
+    
+      if (!token) {
+        console.warn("No se encontró un token. Redirigiendo al login.");
         return {
           authenticated: false,
           redirectTo: "/login",
         };
       }
-
-      return { authenticated: true };
-    },
-    getPermissions: async () => {
-      return null;
-    },
-    getIdentity: async () => {
-      if (data?.user) {
-        const { user } = data;
+    
+      try {
+        const response = await fetch("http://localhost:4000/users/validate-token", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+    
+        if (!response.ok) {
+          console.warn("Token inválido o expirado. Redirigiendo al login.");
+          return {
+            authenticated: false,
+            redirectTo: "/login",
+          };
+        }
+    
+        const data = await response.json();
+        console.log("Token válido. Permitiendo acceso:", data);
+        return { authenticated: true };
+      } catch (error) {
+        console.error("Error al validar el token:", error);
         return {
-          name: user.name,
-          avatar: user.image,
+          authenticated: false,
+          redirectTo: "/login",
         };
       }
+    },
+    
+    getPermissions: async () => {
+      return null; // Manejo de permisos basado en roles (opcional)
+    },
 
+    getIdentity: async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          return {
+            id: payload.id,
+            username: payload.username,
+            role: payload.role,
+          };
+        } catch (error) {
+          console.error("Error al decodificar el token:", error);
+          return null;
+        }
+      }
       return null;
+    },
+
+    onError: (error: any): Promise<OnErrorResponse> => {
+      console.error("Error en AuthProvider:", error);
+
+      return Promise.resolve({
+        error: new Error("Error en el AuthProvider"),
+      });
     },
   };
 

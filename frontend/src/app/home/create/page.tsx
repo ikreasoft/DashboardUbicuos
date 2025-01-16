@@ -8,6 +8,7 @@ import {
   Typography,
   CircularProgress,
   Grid,
+  MenuItem,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 
@@ -28,8 +29,10 @@ const CreateSessionPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [users, setUsers] = useState<{ fullname: string; _id: string }[]>([]);
+  const [devices, setDevices] = useState<{ name: string; id: string }[]>([]);
   const router = useRouter();
 
+  // Fetch users and devices on component mount
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -43,27 +46,43 @@ const CreateSessionPage = () => {
       }
     };
 
+    const fetchDevices = async () => {
+      try {
+        const response = await fetch(`${API_URL}/devices`);
+        if (!response.ok) throw new Error("Error al obtener los dispositivos");
+
+        const data = await response.json();
+        setDevices(data); // Asume que el backend devuelve [{ name, id }]
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
     fetchUsers();
+    fetchDevices();
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (name === "devices") {
-      setFormData((prev) => ({
-        ...prev,
-        devices: value.split(",").map((device) => device.trim()),
-      }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleDeviceChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const selectedDevices = event.target.value as string[];
+    setFormData((prev) => ({
+      ...prev,
+      devices: selectedDevices,
+    }));
   };
 
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
 
-    // Encuentra el ObjectId del usuario basado en el nombre ingresado
     const user = users.find((u) => u.fullname === formData.user);
     if (!user) {
       setError("Usuario no encontrado");
@@ -112,25 +131,43 @@ const CreateSessionPage = () => {
 
         <Grid item xs={12}>
           <TextField
+            select
             fullWidth
-            label="Usuario (nombre completo)"
+            label="Usuario"
             name="user"
             value={formData.user}
-            onChange={handleInputChange}
+            onChange={(e) => setFormData((prev) => ({ ...prev, user: e.target.value }))}
             variant="outlined"
-            helperText="Asegúrate de que el nombre coincida con uno existente"
-          />
+            helperText="Selecciona un usuario de la lista"
+          >
+            {users.map((u) => (
+              <MenuItem key={u._id} value={u.fullname}>
+                {u.fullname}
+              </MenuItem>
+            ))}
+          </TextField>
         </Grid>
 
         <Grid item xs={12}>
           <TextField
+            select
             fullWidth
-            label="Dispositivos (IDs separados por comas)"
+            label="Dispositivos"
             name="devices"
-            value={formData.devices.join(", ")}
-            onChange={handleInputChange}
+            value={formData.devices} // Aquí aseguramos que es un arreglo
+            onChange={handleDeviceChange}
             variant="outlined"
-          />
+            helperText="Selecciona dispositivos disponibles"
+            SelectProps={{
+              multiple: true,
+            }}
+          >
+            {devices.map((device) => (
+              <MenuItem key={device.id} value={device.id}>
+                {device.name}
+              </MenuItem>
+            ))}
+          </TextField>
         </Grid>
       </Grid>
 

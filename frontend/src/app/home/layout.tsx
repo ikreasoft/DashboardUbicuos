@@ -1,23 +1,23 @@
-import authOptions from "@app/api/auth/[...nextauth]/options";
-import { Header } from "@components/header";
+"use client";
+
+import { Header } from "@components/header"; // Asegúrate de que este componente exista
 import { ThemedLayoutV2 } from "@refinedev/mui";
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import React from "react";
+import { useAuth } from "@contexts/AuthContext";
+import React, { useEffect } from "react";
 
-export default async function Layout({ children }: React.PropsWithChildren) {
-  const data = await getData();
+export default function Layout({ children }: React.PropsWithChildren) {
+  const { isAuthenticated } = useAuth();
 
-  if (!data.session?.user) {
-    return redirect("/login");
+  useEffect(() => {
+    if (!isAuthenticated) {
+      // Redirigir al login si no está autenticado
+      window.location.href = "/login";
+    }
+  }, [isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return <p>Cargando...</p>; // Pantalla de carga mientras se valida la autenticación
   }
 
   return <ThemedLayoutV2 Header={Header}>{children}</ThemedLayoutV2>;
-}
-
-async function getData() {
-  const session = await getServerSession(authOptions);
-  return {
-    session,
-  };
 }

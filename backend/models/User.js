@@ -1,94 +1,91 @@
-var express = require("express");
-var mongoose = require("mongoose");
-var router = express.Router();
-var User = require("../models/User.js");
-var jwt = require("jsonwebtoken");
-var { OAuth2Client } = require("google-auth-library");
-const dotenv = require("dotenv");
-dotenv.config();
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const bcrypt = require("bcryptjs");
 
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const SALT_WORK_FACTOR = 10;
 
-// Conexión con la base de datos
-var db = mongoose.connection;
-
-// Endpoint para obtener usuarios (Solo administradores)
-router.get("/", async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (err) {
-    res.status(500).json({ message: "Error al obtener usuarios", error: err });
-  }
+// Definición del esquema de usuario
+const UserSchema = new Schema({
+  username: {
+    type: String,
+    required: [true, "El nombre de usuario es obligatorio."],
+    index: {
+      unique: true,
+      sparse: true, // Permite índices únicos con valores nulos
+    },
+  },
+  password: {
+    type: String,
+    required: [true, "La contraseña es obligatoria."],
+  },
+  fullname: {
+    type: String,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: [true, "El correo electrónico es obligatorio."],
+    unique: [true, "El correo electrónico ya está registrado."], // Garantiza que el correo no se repita
+    match: [/.+\@.+\..+/, "Por favor, proporciona un correo electrónico válido."],
+  },
+  role: {
+    type: String,
+    required: true,
+    default: "user", // Valor predeterminado para el rol
+    enum: ["user", "admin"], // Define roles válidos
+  },
+  lastLogin: {
+    type: Date,
+    default: null,
+  },
+  creationdate: {
+    type: Date,
+    default: Date.now,
+  },
+  Preferences: {
+    favoriteColor: {
+      type: String,
+      trim: true,
+      default: null,
+    },
+  },
 });
 
-// Endpoint para inicio de sesión con usuario y contraseña
-router.post("/signin", async (req, res) => {
-  const { email, password } = req.body;
+// Middleware pre-save para cifrar la contraseña antes de guardarla
+UserSchema.pre("save", function (next) {
+  const user = this;
 
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email y contraseña son requeridos" });
-  }
+  // Si la contraseña no se ha modificado, no hacer nada
+  if (!user.isModified("password")) return next();
 
-  try {
-    const user = await User.findOne({ email });
+  // Generar salt para el cifrado
+  bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
+    if (err) return next(err);
 
-    if (!user) {
-      return res.status(401).json({ message: "Usuario no encontrado" });
-    }
+    // Generar hash de la contraseña
+    bcrypt.hash(user.password, salt, (err, hash) => {
+      if (err) return next(err);
 
-    const isMatch = await user.comparePassword(password); // Método definido en el modelo User
-    if (!isMatch) {
-      return res.status(401).json({ message: "Contraseña incorrecta" });
-    }
-
-    const token = jwt.sign({ id: user._id, email: user.email }, process.env.TOKEN_SECRET, {
-      expiresIn: "24h",
+      user.password = hash; // Reemplazar la contraseña con el hash
+      next();
     });
-
-    res.status(200).json({ token });
-  } catch (err) {
-    res.status(500).json({ message: "Error en el servidor", error: err });
-  }
+  });
 });
 
-// Endpoint para inicio de sesión con Google OAuth
-router.post("/signin/google", async (req, res) => {
-  const { token } = req.body;
-
-  if (!token) {
-    return res.status(400).json({ message: "El token es requerido" });
-  }
-
+// Método para comparar contraseñas
+UserSchema.methods.comparePassword = async function (candidatePassword) {
   try {
-    const ticket = await googleClient.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-
-    const payload = ticket.getPayload();
-    const { sub: googleId, email, name } = payload;
-
-    let user = await User.findOne({ googleId });
-    if (!user) {
-      user = await User.create({
-        googleId,
-        email,
-        fullname: name,
-        username: email,
-        role: "user",
-      });
-    }
-
-    const jwtToken = jwt.sign({ id: user._id, email: user.email }, process.env.TOKEN_SECRET, {
-      expiresIn: "24h",
-    });
-
-    res.status(200).json({ token: jwtToken });
+    return await bcrypt.compare(candidatePassword, this.password);
   } catch (err) {
-    console.error("Error en el inicio de sesión con Google:", err);
-    res.status(401).json({ message: "Token de Google inválido", error: err });
+    console.error("Error al comparar contraseñas:", err);
+    throw new Error("Error al comparar contraseñas.");
   }
+};
+
+// Middleware post-save para realizar acciones después de guardar
+UserSchema.post("save", function (doc, next) {
+  console.log(`Nuevo usuario registrado: ${doc.username}`);
+  next();
 });
 
-module.exports = router;
+module.exports = mongoose.model("User", UserSchema);

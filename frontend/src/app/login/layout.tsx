@@ -1,34 +1,30 @@
-import authOptions from "@app/api/auth/[...nextauth]/options";
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import React from "react";
+"use client";
 
-export default async function LoginLayout({
-  children,
-}: React.PropsWithChildren) {
-  const data = await getData();
+import React, { useEffect, useState } from "react";
+import { useAuth } from "@contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
-  if (data?.session?.user) {
-    // Redirigir a la página principal si ya hay una sesión activa
-    return redirect("/");
+export default function LoginLayout({ children }: React.PropsWithChildren) {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Si el estado de autenticación está cargado
+    if (isAuthenticated !== undefined) {
+      if (isAuthenticated) {
+        router.push("/home");
+      } else {
+        setLoading(false);
+      }
+    }
+  }, [isAuthenticated, router]);
+
+  // Mostrar un estado de carga mientras se resuelve la autenticación
+  if (loading) {
+    return <p>Validando autenticación...</p>;
   }
 
-  // Permitir el acceso libre a cualquier página de login o registro
+  // Si no está autenticado, mostrar los children (páginas de login o registro)
   return <>{children}</>;
-}
-
-async function getData() {
-  try {
-    // Obtener sesión del servidor usando las opciones de NextAuth
-    const session = await getServerSession(authOptions);
-
-    return {
-      session,
-    };
-  } catch (error) {
-    console.error("Error al obtener la sesión:", error);
-    return {
-      session: null,
-    };
-  }
 }
