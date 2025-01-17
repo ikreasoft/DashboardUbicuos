@@ -1,5 +1,0 @@
-NO coje los cuerpos de las peticiones. 👍
-
-El objeto Date está con la hora de Canarias. 👍 
-
-En el modelo Session se puede usar tanto "Camera" como "Sensor" en la referencia de la colección, ¿problema o feature? 🦸‍♀️ o 🦹‍♀️
