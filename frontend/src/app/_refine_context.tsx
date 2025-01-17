@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  // GitHubBanner,
   Refine,
   type AuthProvider,
   OnErrorResponse,
@@ -155,7 +154,6 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
 
   return (
     <>
-      {/* <GitHubBanner /> */}
       <RefineKbarProvider>
         <ColorModeContextProvider defaultMode={defaultMode}>
           <RefineSnackbarProvider>
