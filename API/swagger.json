@@ -1154,6 +1154,33 @@
         }
       }
     },
+    "/sessions/dataSecure": {
+      "post": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Crear un nuevo dato de sesión seguro",
+        "description": "Crea un nuevo dato de sesión con un token valido.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SensorData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Error al crear el dato de sesión"
+          }
+        }
+      }
+    },
     "/users": {
       "get": {
         "tags": [

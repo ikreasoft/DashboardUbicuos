@@ -78,6 +78,13 @@ router.post("/data", function (req, res) {
         res.status(500).send(err)
     });
 });
+router.post("/dataSecure", verificarToken, function (req, res) {
+    SensorData.create(req.body).then(function (data) {
+        res.status(200).send(data)
+    }).catch(function (err) {
+        res.status(500).send(err)
+    });
+});
 router.delete("/data/session/:sesion", function (req, res) {
     SensorData.deleteMany({ session: req.params.sesion }).then(function (data) {
         res.status(200).json(data)
