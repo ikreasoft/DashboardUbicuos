@@ -7,13 +7,16 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var cors = require("cors");
+const dotenv = require('dotenv');
+dotenv.config();
 
 app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 
-const fullURI = "mongodb+srv://chunche95:5pGcOFYhRt0BBk45@cluster0.jq2rb.mongodb.net/iotDB" || "mongodb://mongo:27017/labdb";
+const fullURI = process.env.MONGODB_URI || "mongodb://mongo:27017/labdb";
+console.log(process.env.MONGODB_URI); 
 mongoose
   .connect(fullURI,
     { useNewUrlParser: true, useUnifiedTopology: true }
@@ -28,6 +31,7 @@ var recordRouter = require("./routes/record");
 var rolesRouter = require("./routes/roles");
 var sessionsRouter = require("./routes/sessions");
 var usersRouter = require("./routes/users");
+const { exit } = require('process');
 app.use("/", indexRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/devices", devicesRouter);
