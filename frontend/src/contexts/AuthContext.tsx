@@ -8,7 +8,7 @@ type AuthContextType = {
   user: any; // Aquí puedes definir un tipo más específico según tu backend
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
-  isAuthenticated: boolean;
+  isAuthenticated: boolean | undefined; // Puede ser `undefined` mientras se valida
 };
 
 // Creamos el contexto de autenticación
@@ -17,7 +17,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // Componente proveedor que envuelve la aplicación
 export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   const [user, setUser] = useState<any>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(undefined);
   const router = useRouter();
 
   // Validar el token al cargar el componente
@@ -25,6 +25,8 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
     const token = localStorage.getItem("token");
     if (token) {
       validateToken(token);
+    } else {
+      setIsAuthenticated(false); // No autenticado si no hay token
     }
   }, []);
 
@@ -44,11 +46,11 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
       }
 
       const data = await response.json();
-      setUser(data.user);
-      setIsAuthenticated(true);
+      setUser(data.user); // Aquí es donde se establece el usuario
+      setIsAuthenticated(true); // Usuario autenticado
     } catch (error) {
       console.error("Error al validar el token:", error);
-      logout(); // Si el token es inválido, cerrar sesión
+      logout(); // Si el token es inválido o expirado, cerrar sesión
     }
   };
 

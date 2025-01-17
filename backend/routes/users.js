@@ -41,6 +41,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
+
 // Endpoint para iniciar sesión
 router.post("/signin", async (req, res) => {
   const { username, password } = req.body;
@@ -95,15 +96,17 @@ router.post("/validate-token", (req, res) => {
 });
 
 // Endpoint para obtener usuarios
-router.get("/users", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const users = await User.find({}, "fullname _id"); // Solo enviamos fullname e _id
+    const users = await User.find({}, "fullname _id"); // Obtén solo fullname e ID
     res.status(200).json(users);
   } catch (err) {
     console.error("Error al obtener los usuarios:", err);
     res.status(500).json({ message: "Error en el servidor" });
   }
 });
+
+
 
 // Endpoint para obtener dispositivos (sensores y cámaras)
 router.get("/devices", async (req, res) => {

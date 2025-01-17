@@ -10,13 +10,12 @@ export default function LoginLayout({ children }: React.PropsWithChildren) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Si el estado de autenticación está cargado
-    if (isAuthenticated !== undefined) {
-      if (isAuthenticated) {
-        router.push("/home");
-      } else {
-        setLoading(false);
-      }
+    if (isAuthenticated === undefined) return; // Esperar a que se resuelva el estado
+
+    if (isAuthenticated) {
+      router.push("/home");
+    } else {
+      setLoading(false);
     }
   }, [isAuthenticated, router]);
 
@@ -25,6 +24,5 @@ export default function LoginLayout({ children }: React.PropsWithChildren) {
     return <p>Validando autenticación...</p>;
   }
 
-  // Si no está autenticado, mostrar los children (páginas de login o registro)
   return <>{children}</>;
 }

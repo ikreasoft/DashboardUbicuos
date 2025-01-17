@@ -18,6 +18,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import {
   ExpandMore as ExpandMoreIcon,
@@ -34,7 +38,10 @@ const DevicesPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false); // Para editar
+  const [deviceToEdit, setDeviceToEdit] = useState<any | null>(null); // Dispositivo seleccionado para editar
   const [deviceToDelete, setDeviceToDelete] = useState<any | null>(null);
+  const [deviceType, setDeviceType] = useState<string>(""); // Tipo de dispositivo seleccionado
   const router = useRouter();
 
   useEffect(() => {
@@ -73,8 +80,25 @@ const DevicesPage: React.FC = () => {
     router.push("/devices/create");
   };
 
-  const handleEditDevice = (id: string) => {
-    router.push(`/devices/edit/${id}`);
+  const handleOpenEditDialog = (device: any) => {
+    setDeviceToEdit(device);
+    setEditDialogOpen(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setDeviceToEdit(null);
+    setDeviceType(""); // Reinicia el tipo de dispositivo seleccionado
+    setEditDialogOpen(false);
+  };
+
+  const handleEditDevice = () => {
+    if (!deviceType) {
+      alert("Por favor selecciona el tipo de dispositivo.");
+      return;
+    }
+
+    const resource = deviceType === "Camera" ? "camera" : "sensor";
+    router.push(`/devices/edit/${resource}/${deviceToEdit._id}`);
   };
 
   const handleOpenDeleteDialog = (device: any) => {
@@ -84,33 +108,37 @@ const DevicesPage: React.FC = () => {
 
   const handleCloseDeleteDialog = () => {
     setDeviceToDelete(null);
+    setDeviceType(""); // Reinicia el tipo de dispositivo seleccionado
     setDeleteDialogOpen(false);
   };
 
   const handleDeleteDevice = async () => {
-    if (!deviceToDelete) return;
+    if (!deviceToDelete || !deviceType) {
+      alert("Selecciona el tipo de dispositivo antes de eliminar.");
+      return;
+    }
 
-    const resource = deviceToDelete.type === "Camera" ? "camera" : "sensor"; // Determina el tipo
-    const url = `${API_URL}/${resource}/${deviceToDelete._id}`; // Construye la URL
-    console.log("Eliminando desde:", url); // Log para confirmar la URL
+    const resource = deviceType === "Camera" ? "devices/camera" : "devices/sensor";
+    const url = `${API_URL}/${resource}/${deviceToDelete._id}`;
+    console.log("Intentando eliminar dispositivo desde:", url);
 
     try {
-        const response = await fetch(url, { method: "DELETE" });
+      const response = await fetch(url, { method: "DELETE" });
 
-        if (!response.ok) {
-            const errorText = await response.text(); // Captura el texto de error
-            console.error("Contenido devuelto por el servidor:", errorText);
-            throw new Error(`Error al eliminar: ${response.status}`);
-        }
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Contenido devuelto por el servidor:", errorText);
+        throw new Error(`Error al eliminar: ${response.status}`);
+      }
 
-        setDevices((prev) => prev.filter((d) => d._id !== deviceToDelete._id)); // Actualiza la lista
-        setDeleteDialogOpen(false);
-        alert("Dispositivo eliminado con éxito.");
-    } catch (err: any) {
-        console.error("Error al eliminar:", err.message);
-        alert(err.message || "Hubo un error al eliminar el dispositivo.");
+      setDevices((prev) => prev.filter((d) => d._id !== deviceToDelete._id)); // Actualiza la lista
+      setDeleteDialogOpen(false);
+      alert("Dispositivo eliminado con éxito.");
+    } catch (err: unknown) {
+      console.error("Error al eliminar dispositivo:", err);
+      alert("Hubo un error al eliminar el dispositivo.");
     }
-};
+  };
 
   const getImageForDevice = (type: string) => {
     const images: Record<string, string> = {
@@ -201,7 +229,7 @@ const DevicesPage: React.FC = () => {
                     variant="outlined"
                     color="primary"
                     startIcon={<EditIcon />}
-                    onClick={() => handleEditDevice(device._id)}
+                    onClick={() => handleOpenEditDialog(device)}
                   >
                     Editar
                   </Button>
@@ -214,56 +242,31 @@ const DevicesPage: React.FC = () => {
                     Eliminar
                   </Button>
                 </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginTop: 2,
-                  }}
-                >
-                  <Typography variant="body2" sx={{ cursor: "pointer" }}>
-                    Más información
-                  </Typography>
-                  <IconButton
-                    onClick={() => toggleExpand(device._id)}
-                    aria-expanded={expanded[device._id]}
-                    aria-label="mostrar más"
-                  >
-                    <ExpandMoreIcon />
-                  </IconButton>
-                </Box>
-                <Collapse in={expanded[device._id]} timeout="auto" unmountOnExit>
-                  <Box sx={{ marginTop: 2 }}>
-                    {device.type && <Typography>Tipo: {device.type}</Typography>}
-                    {device.location && <Typography>Ubicación: {device.location}</Typography>}
-                    {device.ipAddress && <Typography>IP: {device.ipAddress}</Typography>}
-                    {device.macAddress && <Typography>MAC: {device.macAddress}</Typography>}
-                    {device.model && <Typography>Modelo: {device.model}</Typography>}
-                    {device.firmwareVersion && (
-                      <Typography>Firmware: {device.firmwareVersion}</Typography>
-                    )}
-                    {device.lastConnection && (
-                      <Typography>
-                        Última Conexión: {new Date(device.lastConnection).toLocaleString()}
-                      </Typography>
-                    )}
-                  </Box>
-                </Collapse>
               </CardContent>
             </Card>
           </Grid>
         ))}
       </Grid>
 
-      {/* Dialogo de confirmación para eliminar */}
+      {/* Diálogo de confirmación para eliminar */}
       <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
         <DialogTitle>Confirmar eliminación</DialogTitle>
         <DialogContent>
           <DialogContentText>
             ¿Estás seguro de que deseas eliminar el dispositivo{" "}
-            <strong>{deviceToDelete?.name}</strong>?
+            <strong>{deviceToDelete?.name}</strong>? Por favor, selecciona el
+            tipo de dispositivo para confirmar.
           </DialogContentText>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Tipo de Dispositivo</InputLabel>
+            <Select
+              value={deviceType}
+              onChange={(e) => setDeviceType(e.target.value)}
+            >
+              <MenuItem value="Camera">Camera</MenuItem>
+              <MenuItem value="Sensor">Sensor</MenuItem>
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDeleteDialog} color="primary">
@@ -271,6 +274,36 @@ const DevicesPage: React.FC = () => {
           </Button>
           <Button onClick={handleDeleteDevice} color="secondary">
             Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Diálogo de confirmación para editar */}
+      <Dialog open={editDialogOpen} onClose={handleCloseEditDialog}>
+        <DialogTitle>Confirmar edición</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            ¿Estás seguro de que deseas editar el dispositivo{" "}
+            <strong>{deviceToEdit?.name}</strong>? Por favor, selecciona el
+            tipo de dispositivo para continuar.
+          </DialogContentText>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Tipo de Dispositivo</InputLabel>
+            <Select
+              value={deviceType}
+              onChange={(e) => setDeviceType(e.target.value)}
+            >
+              <MenuItem value="Camera">Camera</MenuItem>
+              <MenuItem value="Sensor">Sensor</MenuItem>
+            </Select>
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditDialog} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleEditDevice} color="secondary">
+            Confirmar
           </Button>
         </DialogActions>
       </Dialog>

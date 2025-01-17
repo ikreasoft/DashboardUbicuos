@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useForm } from "@refinedev/react-hook-form";
 import {
   TextField,
   Box,
@@ -12,15 +11,24 @@ import {
   Button,
   CircularProgress,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import { useRouter, useParams } from "next/navigation";
+import { useForm } from "@refinedev/react-hook-form";
 
 const API_URL = "http://localhost:4000";
 
 const EditDevice: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { id } = useParams(); // Obtener el ID del dispositivo desde la URL
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [deviceType, setDeviceType] = useState<string>(""); // Tipo del dispositivo
+  const { id } = useParams();
   const router = useRouter();
 
   const {
@@ -31,7 +39,7 @@ const EditDevice: React.FC = () => {
     formState: { isSubmitting },
   } = useForm();
 
-  const selectedType = watch("type");
+  const formType = watch("type");
 
   useEffect(() => {
     const fetchDevice = async () => {
@@ -44,6 +52,7 @@ const EditDevice: React.FC = () => {
 
         // Rellenar los valores del formulario
         Object.keys(device).forEach((key) => setValue(key, device[key]));
+        setDeviceType(device.type); // Establecer el tipo del dispositivo
       } catch (err: any) {
         setError(err.message || "Error al cargar el dispositivo.");
       } finally {
@@ -55,7 +64,6 @@ const EditDevice: React.FC = () => {
   }, [id, setValue]);
 
   const handleFormSubmit = async (data: any) => {
-    // Determinar el recurso correcto basado en el tipo del dispositivo
     const resource = data.type === "Camera" ? "camera" : "sensor";
 
     try {
@@ -74,9 +82,54 @@ const EditDevice: React.FC = () => {
       const updatedDevice = await response.json();
       console.log("Dispositivo actualizado:", updatedDevice);
       alert("Dispositivo actualizado con éxito");
-      router.push("/devices"); // Volver a la lista de dispositivos
+      router.push("/devices");
     } catch (error: any) {
       alert(error.message || "Error al actualizar el dispositivo.");
+    }
+  };
+
+  const handleOpenDeleteDialog = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const handleOpenConfirmDialog = () => {
+    setConfirmDialogOpen(true);
+  };
+
+  const handleCloseConfirmDialog = () => {
+    setConfirmDialogOpen(false);
+  };
+
+  const handleDeleteDevice = async () => {
+    if (!deviceType) {
+      alert("Por favor selecciona el tipo de dispositivo.");
+      return;
+    }
+
+    try {
+      const resource = deviceType === "Camera" ? "camera" : "sensor";
+      const deleteUrl = `${API_URL}/${resource}/${id}`;
+      console.log("Intentando eliminar desde:", deleteUrl); // Log para depuración
+
+      const response = await fetch(deleteUrl, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error al eliminar el dispositivo: ${response.status}`);
+      }
+
+      alert("Dispositivo eliminado con éxito");
+      router.push("/devices");
+    } catch (error: any) {
+      console.error("Error al eliminar el dispositivo:", error);
+      alert(error.message || "Error al eliminar el dispositivo.");
+    } finally {
+      setDeleteDialogOpen(false);
     }
   };
 
@@ -117,7 +170,11 @@ const EditDevice: React.FC = () => {
         />
         <FormControl fullWidth margin="normal">
           <InputLabel>Tipo</InputLabel>
-          <Select {...register("type", { required: "Este campo es obligatorio" })} defaultValue="">
+          <Select
+            {...register("type", { required: "Este campo es obligatorio" })}
+            value={deviceType}
+            onChange={(e) => setDeviceType(e.target.value)}
+          >
             <MenuItem value="Camera">Camera</MenuItem>
             <MenuItem value="Sensor">Sensor</MenuItem>
           </Select>
@@ -134,7 +191,7 @@ const EditDevice: React.FC = () => {
           margin="normal"
           fullWidth
         />
-        {selectedType === "Sensor" && (
+        {formType === "Sensor" && (
           <>
             <TextField
               {...register("macAddress")}
@@ -150,7 +207,7 @@ const EditDevice: React.FC = () => {
             />
           </>
         )}
-        {selectedType === "Camera" && (
+        {formType === "Camera" && (
           <>
             <TextField
               {...register("firmwareVersion")}
@@ -172,16 +229,48 @@ const EditDevice: React.FC = () => {
             />
           </>
         )}
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={isSubmitting}
-          sx={{ marginTop: 3 }}
-        >
-          {isSubmitting ? "Guardando..." : "Guardar Cambios"}
-        </Button>
+        <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: 3 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Guardando..." : "Guardar Cambios"}
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleOpenDeleteDialog}
+          >
+            Eliminar Dispositivo
+          </Button>
+        </Box>
       </form>
+
+      <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Selecciona el Tipo de Dispositivo</DialogTitle>
+        <DialogContent>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Tipo</InputLabel>
+            <Select
+              value={deviceType}
+              onChange={(e) => setDeviceType(e.target.value)}
+            >
+              <MenuItem value="Camera">Camera</MenuItem>
+              <MenuItem value="Sensor">Sensor</MenuItem>
+            </Select>
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleDeleteDevice} color="secondary">
+            Confirmar Eliminación
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

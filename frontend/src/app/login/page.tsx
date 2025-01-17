@@ -7,61 +7,30 @@ import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
-
-const API_URL = "http://localhost:4000/users"; // Asegúrate de que coincida con tu backend
+import { useAuth } from "@contexts/AuthContext";
 
 export default function Login() {
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // Agregado para manejar estados de carga
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!username || !password) {
       setError("Por favor ingresa usuario y contraseña.");
-      console.error("Error: Faltan datos (username o password).");
       return;
     }
 
-    setLoading(true); // Activar estado de carga
-    setError(""); // Limpiar errores previos
+    setLoading(true);
+    setError(null);
 
     try {
-      console.log("Enviando datos al backend:", { username, password });
-
-      const response = await fetch(`${API_URL}/signin`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      console.log("Respuesta del backend recibida:", response);
-
-      if (!response.ok) {
-        const data = await response.json();
-        console.error("Error recibido del backend:", data);
-        throw new Error(data.message || "Usuario o contraseña inválidos.");
-      }
-
-      const { token } = await response.json();
-      console.log("Token recibido:", token);
-
-      if (!token) {
-        throw new Error("No se recibió un token válido.");
-      }
-
-      // Guardar el token en localStorage
-      localStorage.setItem("token", token);
-
-      console.log("Token guardado en localStorage. Redirigiendo...");
-      window.location.href = "/home"; // Redirigir al dashboard
+      await login(username, password);
     } catch (err) {
-      console.error("Error durante el inicio de sesión:", err);
-      setError(err instanceof Error ? err.message : "Error desconocido al iniciar sesión.");
+      setError(err instanceof Error ? err.message : "Error desconocido.");
     } finally {
-      setLoading(false); // Desactivar estado de carga
+      setLoading(false);
     }
   };
 
@@ -85,17 +54,15 @@ export default function Login() {
           Iniciar Sesión
         </Typography>
 
-        {/* Campo de Usuario */}
         <TextField
           label="Usuario"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           fullWidth
           required
-          disabled={loading} // Deshabilitar durante la carga
+          disabled={loading}
         />
 
-        {/* Campo de Contraseña */}
         <TextField
           label="Contraseña"
           type="password"
@@ -103,28 +70,25 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
           fullWidth
           required
-          disabled={loading} // Deshabilitar durante la carga
+          disabled={loading}
         />
 
-        {/* Botón para Login */}
         <Button
           variant="contained"
           size="large"
           fullWidth
           onClick={handleLogin}
-          disabled={loading} // Deshabilitar durante la carga
+          disabled={loading}
         >
           {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
         </Button>
 
-        {/* Mostrar errores */}
         {error && (
           <Typography color="error" align="center">
             {error}
           </Typography>
         )}
 
-        {/* Enlace para ir a la página de registro */}
         <Typography align="center">
           ¿No tienes una cuenta?{" "}
           <Link href="/register" style={{ color: "#1976d2", textDecoration: "none" }}>

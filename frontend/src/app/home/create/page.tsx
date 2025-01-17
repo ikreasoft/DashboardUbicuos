@@ -40,9 +40,11 @@ const CreateSessionPage = () => {
         if (!response.ok) throw new Error("Error al obtener los usuarios");
 
         const data = await response.json();
+        if (!Array.isArray(data)) throw new Error("Formato de usuarios inválido");
         setUsers(data); // Asume que el backend devuelve [{ fullname, _id }]
       } catch (err) {
         console.error(err);
+        setError("Error al cargar los usuarios");
       }
     };
 
@@ -52,9 +54,11 @@ const CreateSessionPage = () => {
         if (!response.ok) throw new Error("Error al obtener los dispositivos");
 
         const data = await response.json();
+        if (!Array.isArray(data)) throw new Error("Formato de dispositivos inválido");
         setDevices(data); // Asume que el backend devuelve [{ name, id }]
       } catch (err) {
         console.error(err);
+        setError("Error al cargar los dispositivos");
       }
     };
 

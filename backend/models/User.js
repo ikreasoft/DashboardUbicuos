@@ -1,18 +1,14 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 
 const SALT_WORK_FACTOR = 10;
 
 // Definición del esquema de usuario
-const UserSchema = new Schema({
+const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: [true, "El nombre de usuario es obligatorio."],
-    index: {
-      unique: true,
-      sparse: true, // Permite índices únicos con valores nulos
-    },
+    unique: true,
   },
   password: {
     type: String,
@@ -20,38 +16,26 @@ const UserSchema = new Schema({
   },
   fullname: {
     type: String,
-    trim: true,
+    required: [true, "El nombre completo es obligatorio."],
   },
   email: {
     type: String,
     required: [true, "El correo electrónico es obligatorio."],
-    unique: [true, "El correo electrónico ya está registrado."], // Garantiza que el correo no se repita
+    unique: [true, "El correo electrónico ya está registrado."],
     match: [/.+\@.+\..+/, "Por favor, proporciona un correo electrónico válido."],
   },
   role: {
     type: String,
-    required: true,
-    default: "user", // Valor predeterminado para el rol
-    enum: ["user", "admin"], // Define roles válidos
+    default: "user",
+    enum: ["user", "admin"],
   },
-  lastLogin: {
-    type: Date,
-    default: null,
-  },
-  creationdate: {
+  creationDate: {
     type: Date,
     default: Date.now,
   },
-  Preferences: {
-    favoriteColor: {
-      type: String,
-      trim: true,
-      default: null,
-    },
-  },
 });
 
-// Middleware pre-save para cifrar la contraseña antes de guardarla
+// Middleware pre-save para cifrar la contraseña
 UserSchema.pre("save", function (next) {
   const user = this;
 
@@ -73,19 +57,9 @@ UserSchema.pre("save", function (next) {
 });
 
 // Método para comparar contraseñas
-UserSchema.methods.comparePassword = async function (candidatePassword) {
-  try {
-    return await bcrypt.compare(candidatePassword, this.password);
-  } catch (err) {
-    console.error("Error al comparar contraseñas:", err);
-    throw new Error("Error al comparar contraseñas.");
-  }
+UserSchema.methods.comparePassword = function (candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Middleware post-save para realizar acciones después de guardar
-UserSchema.post("save", function (doc, next) {
-  console.log(`Nuevo usuario registrado: ${doc.username}`);
-  next();
-});
-
+// Exportar el modelo
 module.exports = mongoose.model("User", UserSchema);
