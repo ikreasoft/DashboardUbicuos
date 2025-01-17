@@ -16,7 +16,6 @@ router.get("/", function (req, res) {
     });
 });
 
-
 router.get("/:id", function (req, res) {
     Role.findById(req.params.id).populate('permissions').then(function (role) {
         console.log(role);

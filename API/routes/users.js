@@ -20,7 +20,7 @@ router.get("/",verificarToken, function (req, res) {
         res.status(500).send(err)
     });
 });
-router.post("/", function (req, res, next) {
+router.post("/register", function (req, res, next) {
     User.create(req.body, function (err, userinfo) {
         if (err) res.status(500).send(err);
         else res.sendStatus(200);

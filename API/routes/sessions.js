@@ -62,7 +62,7 @@ router.delete("/session/:id", function (req, res) {
 // #endregion
 // #region data
 router.get("/data/:sesion", function (req, res) {
-    const pagina = req.query.page==undefined?0:req.query.page -1;
+    const pagina = req.query.pagina==undefined?0:req.query.pagina -1;
     const tamaño = req.query.size==undefined?1000:req.query.size;
     const sesion = req.params.sesion;
     SensorData.find({ session: sesion }).limit(tamaño).skip(pagina*tamaño).then(function (data) {

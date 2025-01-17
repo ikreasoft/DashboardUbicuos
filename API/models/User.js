@@ -18,16 +18,23 @@ var UserSchema = new Schema({
     },
     password: {
         type: String,
-        required: true
+        required: [true, "La contraseña es obligatoria."]
     },
-    fullname: String,
+    fullname: {
+        type: String,
+        required: [true, "El nombre completo es obligatorio."]
+    },
     email: {
         type: String,
-        required: true
+        required: [true, "El correo electrónico es obligatorio."],
+        unique: [true, "El correo electrónico ya está registrado."],
+        match: [/.+\@.+\..+/, "Por favor, proporciona un correo electrónico válido."]
     },
     role: {
         type: String,
-        required: true
+        required: true,
+        default: "user",
+        enum: ["user", "admin"]
     },
     lastLogin: Date,
     creationdate: {

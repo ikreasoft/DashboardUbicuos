@@ -1211,7 +1211,9 @@
             "bearerAuth": []
           }
         ]
-      },
+      }
+    },
+    "/users/register": {
       "post": {
         "tags": [
           "Users"
@@ -1223,7 +1225,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/UserRegister"
               }
             }
           }
@@ -1666,13 +1668,57 @@
             "description": "Correo electrónico del usuario"
           },
           "role": {
-            "$ref": "#/components/schemas/Role",
-            "description": "Rol del usuario"
+            "type": "string",
+            "required": true,
+            "description": "Rol del usuario",
+            "enum": [
+              "Admin",
+              "User"
+            ]
           },
           "lastLogin": {
             "type": "string",
             "format": "date-time",
             "description": "Último inicio de sesión"
+          },
+          "creationDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de creación del usuario"
+          }
+        }
+      },
+      "UserRegister": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "required": true,
+            "unique": true,
+            "description": "Nombre del usuario"
+          },
+          "password": {
+            "type": "string",
+            "required": true,
+            "description": "Contraseña del usuario"
+          },
+          "fullname": {
+            "type": "string",
+            "description": "Nombre completo del usuario"
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "description": "Correo electrónico del usuario"
+          },
+          "role": {
+            "type": "string",
+            "required": true,
+            "description": "Rol del usuario",
+            "enum": [
+              "Admin",
+              "User"
+            ]
           },
           "creationDate": {
             "type": "string",
