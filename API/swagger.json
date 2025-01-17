@@ -1,0 +1,1759 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API del laboratorio de IoT",
+    "description": "API para la gestión de dispositivos, modelos y sensores. \n \n Cuando se quiere insertar un dato no hay que poner el campo \"_id\", ya que es autogenerado por la base de datos.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/devices": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Obtener todos los dispositivos",
+        "description": "Retorna una lista de todas las cámaras y sensores según el filtro.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "type",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Tipo de dispositivo ('Camera', 'Temperature'...)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de dispositivos obtenida correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/Camera"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Sensor"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al obtener los dispositivos"
+          }
+        }
+      }
+    },
+    "/devices/camera/{id}": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Obtener una cámara por ID",
+        "description": "Retorna una cámara por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la cámara"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cámara obtenida correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Camera"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al obtener la cámara"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Actualizar una cámara por ID",
+        "description": "Actualiza la información de una cámara específica.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la cámara"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Camera"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cámara actualizada correctamente"
+          },
+          "500": {
+            "description": "Error al actualizar la cámara"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Eliminar una cámara por ID",
+        "description": "Elimina una cámara específica por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la cámara"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cámara eliminada correctamente"
+          },
+          "500": {
+            "description": "Error al eliminar la cámara"
+          }
+        }
+      }
+    },
+    "/devices/camera": {
+      "post": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Crear una nueva cámara",
+        "description": "Crea un nuevo dispositivo de tipo cámara.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Camera"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cámara creada correctamente"
+          },
+          "500": {
+            "description": "Error al crear la cámara"
+          }
+        }
+      }
+    },
+    "/devices/models": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Obtener todos los modelos",
+        "description": "Retorna una lista de todos los modelos.",
+        "responses": {
+          "200": {
+            "description": "Lista de modelos obtenida correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Model"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al obtener los modelos"
+          }
+        }
+      }
+    },
+    "/devices/model/{id}": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Obtener un modelo por ID",
+        "description": "Retorna un modelo por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del modelo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Modelo obtenido correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al obtener el modelo"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Actualizar un modelo por ID",
+        "description": "Actualiza la información de un modelo específico.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del modelo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Model"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Modelo actualizado correctamente"
+          },
+          "500": {
+            "description": "Error al actualizar el modelo"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Eliminar un modelo por ID",
+        "description": "Elimina un modelo específico por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del modelo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Modelo eliminado correctamente"
+          },
+          "500": {
+            "description": "Error al eliminar el modelo"
+          }
+        }
+      }
+    },
+    "/devices/model": {
+      "post": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Crear un nuevo modelo",
+        "description": "Crea un nuevo modelo.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Model"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Modelo creado correctamente"
+          },
+          "500": {
+            "description": "Error al crear el modelo"
+          }
+        }
+      }
+    },
+    "/devices/sensor/{id}": {
+      "put": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Actualizar un sensor por ID",
+        "description": "Actualiza la información de un sensor específico.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del sensor"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Sensor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sensor actualizado correctamente"
+          },
+          "500": {
+            "description": "Error al actualizar el sensor"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Eliminar un sensor por ID",
+        "description": "Elimina un sensor específico por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del sensor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sensor eliminado correctamente"
+          },
+          "500": {
+            "description": "Error al eliminar el sensor"
+          }
+        }
+      }
+    },
+    "/devices/sensor": {
+      "post": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Crear un nuevo sensor",
+        "description": "Crea un nuevo dispositivo de tipo sensor.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Sensor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sensor creado correctamente"
+          },
+          "500": {
+            "description": "Error al crear el sensor"
+          }
+        }
+      }
+    },
+    "/records/{cameraId}": {
+      "get": {
+        "tags": [
+          "Records"
+        ],
+        "summary": "Obtener todas las grabaciones",
+        "description": "Retorna una lista de todas las grabaciones según el filtro.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cameraId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la cámara"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de grabaciones obtenida correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Record"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al obtener las grabaciones"
+          }
+        }
+      }
+    },
+    "/permissions": {
+      "post": {
+        "tags": [
+          "Permissions"
+        ],
+        "summary": "Crear un nuevo permiso",
+        "description": "Crea un nuevo permiso.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Permission"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Permiso creado correctamente"
+          },
+          "500": {
+            "description": "Error al crear el permiso"
+          }
+        }
+      }
+    },
+    "/permissions/{id}": {
+      "put": {
+        "tags": [
+          "Permissions"
+        ],
+        "summary": "Actualizar un permiso por ID",
+        "description": "Actualiza la información de un permiso específico.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del permiso"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Permission"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Permiso actualizado correctamente"
+          },
+          "500": {
+            "description": "Error al actualizar el permiso"
+          }
+        }
+      }
+    },
+    "/record": {
+      "post": {
+        "tags": [
+          "Records"
+        ],
+        "summary": "Crear una nueva grabación",
+        "description": "Crea una nueva grabación.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Record"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Grabación creada correctamente"
+          },
+          "500": {
+            "description": "Error al crear la grabación"
+          }
+        }
+      }
+    },
+    "/record/{id}": {
+      "get": {
+        "tags": [
+          "Records"
+        ],
+        "summary": "Obtener una grabación por ID",
+        "description": "Retorna una grabación por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la grabación"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Grabación obtenida correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Record"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al obtener la grabación"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Records"
+        ],
+        "summary": "Actualizar una grabación por ID",
+        "description": "Actualiza la información de una grabación específica.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la grabación"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Record"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Grabación actualizada correctamente"
+          },
+          "500": {
+            "description": "Error al actualizar la grabación"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Records"
+        ],
+        "summary": "Eliminar una grabación por ID",
+        "description": "Elimina una grabación específica por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la grabación"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Grabación eliminada correctamente"
+          },
+          "500": {
+            "description": "Error al eliminar la grabación"
+          }
+        }
+      }
+    },
+    "/roles": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Obtener todos los roles",
+        "description": "Retorna una lista de todos los roles.",
+        "responses": {
+          "200": {
+            "description": "Lista de roles obtenida correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al obtener los roles"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Actualizar un rol por ID",
+        "description": "Actualiza la información de un rol específico.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del rol"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Role"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rol actualizado correctamente"
+          },
+          "500": {
+            "description": "Error al actualizar el rol"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Crear un nuevo rol",
+        "description": "Crea un nuevo rol.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Role"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rol creado correctamente"
+          },
+          "500": {
+            "description": "Error al crear el rol"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Eliminar un rol por ID",
+        "description": "Elimina un rol específico por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del rol"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rol eliminado correctamente"
+          },
+          "500": {
+            "description": "Error al eliminar el rol"
+          }
+        }
+      }
+    },
+    "/roles/{id}": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Obtener un rol por ID",
+        "description": "Retorna un rol por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del rol"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rol obtenido correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al obtener el rol"
+          }
+        }
+      }
+    },
+    "/sessions": {
+      "get": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Obtener todas las sesiones",
+        "description": "Retorna una lista de todas las sesiones.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Sesiones con fecha mayor o igual a la fecha"
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Sesiones con una fecha menor o igual a la fecha"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de sesiones obtenida correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "description": "ID de la sesión"
+                      },
+                      "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Fecha de la sesión"
+                      },
+                      "duration": {
+                        "type": "number",
+                        "description": "Duración de la sesión"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al obtener las sesiones"
+          }
+        }
+      }
+    },
+    "/sessions/session/{id}": {
+      "get": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Obtener una sesión por ID",
+        "description": "Retorna una sesión por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la sesión"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sesión obtenida correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "description": "ID de la sesión"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al obtener la sesión"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Actualizar una sesión por ID",
+        "description": "Actualiza la información de una sesión específica.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la sesión"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Fecha de la sesión"
+                  },
+                  "duration": {
+                    "type": "number",
+                    "description": "Duración de la sesión"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sesión actualizada correctamente"
+          },
+          "500": {
+            "description": "Error al actualizar la sesión"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Eliminar una sesión por ID",
+        "description": "Elimina una sesión específica por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la sesión"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sesión eliminada correctamente"
+          },
+          "500": {
+            "description": "Error al eliminar la sesión"
+          }
+        }
+      }
+    },
+    "/sessions/session": {
+      "post": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Crear una nueva sesión",
+        "description": "Crea una nueva sesión.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "subject": {
+                    "type": "string",
+                    "description": "Sujeto de la sesión",
+                    "required": true,
+                    "default": "Sujeto de prueba"
+                  },
+                  "devices": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Dispositivos de la sesión",
+                    "required": true,
+                    "default": [
+                      "6751adbd2304638bba494076"
+                    ]
+                  },
+                  "user": {
+                    "type": "string",
+                    "description": "Usuario de la sesión",
+                    "required": true,
+                    "default": "67236a6bbbcbc31482e45963"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sesión creada correctamente"
+          },
+          "500": {
+            "description": "Error al crear la sesión"
+          }
+        }
+      }
+    },
+    "/sessions/data/{id}": {
+      "get": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Obtener los datos de una sesión por ID",
+        "description": "Retorna los datos de una sesión por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "default": "ebd9c3929493b89c34b1654b",
+            "description": "ID de la sesión"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Página de los datos"
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Límite de datos por página"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Datos de la sesión obtenidos correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Sensor"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al obtener los datos de la sesión"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Eliminar los datos de una sesión por ID",
+        "description": "Elimina los datos de una sesión específica por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la sesión"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Datos de la sesión eliminados correctamente"
+          },
+          "500": {
+            "description": "Error al eliminar los datos de la sesión"
+          }
+        }
+      }
+    },
+    "/sessions/data/single/{id}": {
+      "delete": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Eliminar un dato de una sesión por ID",
+        "description": "Elimina un dato de una sesión específica por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del dato de la sesión"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Error al eliminar el dato de la sesión"
+          }
+        }
+      }
+    },
+    "/sessions/data": {
+      "post": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Crear un nuevo dato de sesión",
+        "description": "Crea un nuevo dato de sesión.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SensorData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Error al crear el dato de sesión"
+          }
+        }
+      }
+    },
+    "/sessions/dataSecure": {
+      "post": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Crear un nuevo dato de sesión seguro",
+        "description": "Crea un nuevo dato de sesión con un token valido.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SensorData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Error al crear el dato de sesión"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Obtener todos los usuarios",
+        "description": "Retorna una lista de todos los usuarios.",
+        "responses": {
+          "200": {
+            "description": "Lista de usuarios obtenida correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al obtener los usuarios"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/register": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Crear un nuevo usuario",
+        "description": "Crea un nuevo usuario.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegister"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuario creado correctamente"
+          },
+          "500": {
+            "description": "Error al crear el usuario"
+          }
+        }
+      }
+    },
+    "/users/signin": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Iniciar sesión",
+        "description": "Inicia sesión en el sistema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Correo electrónico del usuario",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Contraseña del usuario",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Inicio de sesión correcto"
+          },
+          "500": {
+            "description": "Error al iniciar sesión"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Obtener un usuario por ID",
+        "description": "Retorna un usuario por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del usuario"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario obtenido correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al obtener el usuario"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Audit": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID de la auditoría"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User",
+            "required": true,
+            "description": "Usuario de la auditoría"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "default": "Fecha actual",
+            "description": "Fecha en que se realizo la acción"
+          },
+          "action": {
+            "type": "string",
+            "required": true,
+            "description": "Acción realizado por el usuario"
+          }
+        }
+      },
+      "Camera": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID de la cámara"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nombre de la cámara"
+          },
+          "type": {
+            "type": "string",
+            "description": "Tipo de cámara",
+            "default": "Camera"
+          },
+          "location": {
+            "type": "string",
+            "description": "Ubicación de la cámara"
+          },
+          "ipAddress": {
+            "type": "string",
+            "description": "Dirección IP de la cámara"
+          },
+          "macAddress": {
+            "type": "string",
+            "description": "Dirección MAC de la cámara"
+          },
+          "model": {
+            "type": "string",
+            "description": "Modelo de la cámara"
+          },
+          "firmwareVersion": {
+            "type": "string",
+            "description": "Versión del firmware de la cámara"
+          },
+          "lastConnection": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Última conexión de la cámara"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Estado de la cámara"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Resolución de la cámara"
+          },
+          "streamingUrl": {
+            "type": "string",
+            "description": "URL de streaming de la cámara"
+          },
+          "isRecording": {
+            "type": "boolean",
+            "description": "Determina si está grabando la cámara"
+          }
+        }
+      },
+      "Model": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID del modelo"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nombre del modelo"
+          },
+          "protocol": {
+            "type": "string",
+            "description": "Protocolo del modelo"
+          },
+          "firmwareVersion": {
+            "type": "string",
+            "description": "Versión del firmware del modelo"
+          }
+        }
+      },
+      "Permission": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID del permiso"
+          },
+          "module": {
+            "type": "string",
+            "description": "Módulo del permiso"
+          },
+          "action": {
+            "type": "object",
+            "properties": {
+              "read": {
+                "type": "boolean",
+                "default": false
+              },
+              "use": {
+                "type": "boolean",
+                "default": false
+              },
+              "modify": {
+                "type": "boolean",
+                "default": false
+              }
+            }
+          }
+        }
+      },
+      "Record": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID de la grabación"
+          },
+          "device": {
+            "type": "string",
+            "description": "Dispositivo que graba"
+          },
+          "format": {
+            "type": "string",
+            "description": "Formato de la grabación"
+          },
+          "duration": {
+            "type": "number",
+            "description": "Duración de la grabación"
+          },
+          "filesize": {
+            "type": "number",
+            "description": "Tamaño del archivo de la grabación"
+          },
+          "fileUrl": {
+            "type": "string",
+            "description": "URL del archivo de la grabación"
+          },
+          "statTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de inicio de la grabación"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de fin de la grabación"
+          }
+        }
+      },
+      "Role": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID del rol"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nombre del rol"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Permission"
+            },
+            "description": "Permisos del rol"
+          }
+        }
+      },
+      "Sensor": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID del sensor"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nombre del sensor"
+          },
+          "type": {
+            "type": "string",
+            "description": "Tipo de sensor",
+            "default": "Temperature"
+          },
+          "location": {
+            "type": "string",
+            "description": "Ubicación del sensor"
+          },
+          "ipAddress": {
+            "type": "string",
+            "description": "Dirección IP del sensor"
+          },
+          "macAddress": {
+            "type": "string",
+            "description": "Dirección MAC del sensor"
+          },
+          "model": {
+            "type": "string",
+            "description": "Modelo del sensor"
+          },
+          "firmwareVersion": {
+            "type": "string",
+            "description": "Versión del firmware del sensor"
+          },
+          "lastConnection": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Última conexión del sensor"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Estado del sensor"
+          }
+        }
+      },
+      "SensorData": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID del dato"
+          },
+          "device": {
+            "type": "string",
+            "description": "ID del sensor"
+          },
+          "session": {
+            "type": "string",
+            "description": "ID de la sesión"
+          },
+          "position": {
+            "type": "string",
+            "description": "Ubicación del dato"
+          },
+          "value": {
+            "type": "number",
+            "description": "Valor del dato"
+          },
+          "measureUnit": {
+            "type": "string",
+            "description": "Unidad de medida del dato"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha del dato"
+          }
+        }
+      },
+      "Session": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID de la sesión"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Sujeto de la sesión"
+          },
+          "startSession": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de inicio de la sesión"
+          },
+          "endSession": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de finalización de la sesión"
+          },
+          "devices": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/Sensor"
+                },
+                {
+                  "$ref": "#/components/schemas/Camera"
+                }
+              ]
+            },
+            "description": "Dispositivos de la sesión"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User",
+            "description": "Usuario de la sesión"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID del usuario"
+          },
+          "username": {
+            "type": "string",
+            "required": true,
+            "unique": true,
+            "description": "Nombre del usuario"
+          },
+          "password": {
+            "type": "string",
+            "required": true,
+            "description": "Contraseña del usuario"
+          },
+          "fullname": {
+            "type": "string",
+            "description": "Nombre completo del usuario"
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "description": "Correo electrónico del usuario"
+          },
+          "role": {
+            "type": "string",
+            "required": true,
+            "description": "Rol del usuario",
+            "enum": [
+              "Admin",
+              "User"
+            ]
+          },
+          "lastLogin": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Último inicio de sesión"
+          },
+          "creationDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de creación del usuario"
+          }
+        }
+      },
+      "UserRegister": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "required": true,
+            "unique": true,
+            "description": "Nombre del usuario"
+          },
+          "password": {
+            "type": "string",
+            "required": true,
+            "description": "Contraseña del usuario"
+          },
+          "fullname": {
+            "type": "string",
+            "description": "Nombre completo del usuario"
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "description": "Correo electrónico del usuario"
+          },
+          "role": {
+            "type": "string",
+            "required": true,
+            "description": "Rol del usuario",
+            "enum": [
+              "Admin",
+              "User"
+            ]
+          },
+          "creationDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de creación del usuario"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Devices",
+      "description": "Endpoints para la gestión de camaras, modelos y sensores"
+    },
+    {
+      "name": "Records",
+      "description": "Endpoints para la gestión de grabaciones"
+    },
+    {
+      "name": "Permissions",
+      "description": "Endpoints para la gestión de permisos que tienen los roles"
+    },
+    {
+      "name": "Roles",
+      "description": "Endpoints para la gestión de roles"
+    },
+    {
+      "name": "Sessions",
+      "description": "Endpoints para la gestión de sesiones de grabación"
+    }
+  ]
+}
