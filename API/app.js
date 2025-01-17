@@ -47,11 +47,5 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
-// app.listen(port, () => {
-//     console.log(`Example app listening on port ${port}`)
-//     console.log(`http://localhost:${port}`)
-//   })
-
   
 module.exports = app;
