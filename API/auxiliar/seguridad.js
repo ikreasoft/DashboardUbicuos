@@ -1,4 +1,8 @@
 var jwt = require("jsonwebtoken");
+// Token generation imports
+const dotenv = require('dotenv');
+// get config vars
+dotenv.config();
 function verificarToken(req, res, next) {
   var authHeader = req.get('authorization');
   console.log(authHeader);
