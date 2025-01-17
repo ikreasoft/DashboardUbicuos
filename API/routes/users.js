@@ -58,8 +58,6 @@ router.post("/signin",
             });
     },
     function (req, res, next) {
-        //debug("... generando token");
-        console.log(process.env.TOKEN_SECRET);
         jwt.sign({username: req.body.username},process.env.TOKEN_SECRET, {expiresIn: 24*3600 // expira en 1 día...
         }, function(err, generatedToken) {
             if (err) res.status(500).send("¡Error generando token de autenticación");
