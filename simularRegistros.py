@@ -2,7 +2,6 @@ import random
 import datetime
 import requests
 import json
-import time
 import argparse
 from alive_progress import alive_bar
 
@@ -14,10 +13,10 @@ from alive_progress import alive_bar
             text:        respuesta del servidor
     """
 def postJson(json, token =None):
-    print(json)
-    url = "http://localhost:3000/sessions/dataSecure"
+    url = "http://localhost:4000/sessions/data"
     headers = {'Content-type': 'application/json'}
     if token is not None:
+        url = "http://localhost:4000/sessions/dataSecure"
         headers['Authorization'] = 'Bearer '+ token
     response = requests.post(url, data=json, headers=headers)
     return response.status_code, response.text
@@ -57,6 +56,7 @@ def simularRegistros(inicio, fin, frecuencia, extra_args, minimo=0, maximo=1, to
     return: inicio:           fecha de inicio
             fin:              fecha de fin
             frecuencia:       frecuencia de los registros
+            token:            token de autenticación
             minimo:           valor mínimo del sensor [Opcional]
             maximo:           valor máximo del sensor [Opcional]
             parametros_extra: parametros adicionales que se añadiran a los registros en formato clave valor, es decir van en pareja Eje: location casa measueUnit temperatura
@@ -90,11 +90,7 @@ def comprobarArgumentos():
     if max is not None and min is not None and max < min:
         print(f'El valor máximo debe ser mayor al valor mínimo {min} < {max}')
         exit()
-    print(f'inicio: {inicio}')
-    print(f'End: {fin}')
-    print(f'Freq: {frecuencia}')
     parametros_extra = args.extra_args
-    print(f'Extra args: {parametros_extra}')
     return inicio, fin, frecuencia, min, max, token, parametros_extra
 
 def main():

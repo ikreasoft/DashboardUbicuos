@@ -1256,11 +1256,13 @@
                 "properties": {
                   "username": {
                     "type": "string",
-                    "description": "Correo electrónico del usuario",
+                    "description": "nombre del usuario",
+                    "default": "julian",
                     "required": true
                   },
                   "password": {
                     "type": "string",
+                    "default": "julian",
                     "description": "Contraseña del usuario",
                     "required": true
                   }
