@@ -7,7 +7,6 @@ import argparse
 from alive_progress import alive_bar
 
 """
-ASD
     Envia un json a la API
     params: json: json a enviar
 
