@@ -14,7 +14,13 @@ Este proyecto se enfoca en desarrollar un sistema de monitoreo y control basado 
   <br>
   <a href="https://github.com/ikreasoft/DashboardUbicuos/issues">
     <img src="https://img.shields.io/github/issues/ikreasoft/DashboardUbicuos?color=0088ff&style=for-the-badge&logo=github" alt="ikreasoft/DashboardUbicuos's issues"/>
+  <a href="https://github.com/ikreasoft/DashboardUbicuos/issues">
+    <img src="https://img.shields.io/github/issues/ikreasoft/DashboardUbicuos?color=0088ff&style=for-the-badge&logo=github" alt="ikreasoft/DashboardUbicuos's issues"/>
   </a>
+  <a href="https://github.com/ikreasoft/DashboardUbicuos/pulls">
+    <img src="https://img.shields.io/github/issues-pr/ikreasoft/DashboardUbicuos?color=0088ff&style=for-the-badge&logo=github"  alt="ikreasoft/DashboardUbicuos's pull requests"/>
+  </a>
+</div>
   <a href="https://github.com/ikreasoft/DashboardUbicuos/pulls">
     <img src="https://img.shields.io/github/issues-pr/ikreasoft/DashboardUbicuos?color=0088ff&style=for-the-badge&logo=github"  alt="ikreasoft/DashboardUbicuos's pull requests"/>
   </a>
