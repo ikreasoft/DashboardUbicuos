@@ -1,25 +1,14 @@
-###> ikreasoft/DashboardUbicuos ###
-
-##### Folders #####
-build/
-dist/
-node_modules/
-vendor/
-var/
-.tmp/
-
-# IDE's
-.vscode/
-.idea/
-
-
-##### Files #####
-ignore.*
-*.ignore.*
-
-# Environment variables and secret keys
+node_modules
+dist
+.DS_Store
+server/public
+vite.config.ts.*
+*.tar.gz
+.replit
 .env
-.env.test
-*.pem
-
-###< ikreasoft/DashboardUbicuos ###
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.mp4
+attached_assets/
