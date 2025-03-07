@@ -1,0 +1,472 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "API de Dispositivos",
+      "description": "API para la gestión de dispositivos, modelos y sensores.",
+      "version": "1.0.0"
+    },
+    "paths": {
+      "/devices": {
+        "get": {
+          "tags": [
+            "Devices"
+          ],
+          "summary": "Obtener todos los dispositivos",
+          "description": "Retorna una lista de todas las cámaras y sensores según el filtro.",
+          "parameters": [
+            {
+              "in": "query",
+              "name": "type",
+              "schema": {
+                "type": "string"
+              },
+              "description": "Tipo de dispositivo ('Camera' o 'Sensor')"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Lista de dispositivos obtenida correctamente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/Camera"
+                        },
+                        {
+                          "$ref": "#/components/schemas/Sensor"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error al obtener los dispositivos"
+            }
+          }
+        }
+      },
+      "/devices/camera/{id}": {
+        "get": {
+          "tags": [
+            "Devices"
+          ],
+          "summary": "Obtener una cámara por ID",
+          "description": "Retorna una cámara por su ID.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID de la cámara"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Cámara obtenida correctamente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Camera"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error al obtener la cámara"
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Devices"
+          ],
+          "summary": "Actualizar una cámara por ID",
+          "description": "Actualiza la información de una cámara específica.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID de la cámara"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Camera"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Cámara actualizada correctamente"
+            },
+            "500": {
+              "description": "Error al actualizar la cámara"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Devices"
+          ],
+          "summary": "Eliminar una cámara por ID",
+          "description": "Elimina una cámara específica por su ID.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID de la cámara"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Cámara eliminada correctamente"
+            },
+            "500": {
+              "description": "Error al eliminar la cámara"
+            }
+          }
+        }
+      },
+      "/devices/camera": {
+        "post": {
+          "tags": [
+            "Devices"
+          ],
+          "summary": "Crear una nueva cámara",
+          "description": "Crea un nuevo dispositivo de tipo cámara.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Camera"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Cámara creada correctamente"
+            },
+            "500": {
+              "description": "Error al crear la cámara"
+            }
+          }
+        }
+      },
+      "/devices/models": {
+        "get": {
+          "tags": [
+            "Devices"
+          ],
+          "summary": "Obtener todos los modelos",
+          "description": "Retorna una lista de todos los modelos.",
+          "responses": {
+            "200": {
+              "description": "Lista de modelos obtenida correctamente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Model"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error al obtener los modelos"
+            }
+          }
+        }
+      },
+      "/devices/model/{id}": {
+        "get": {
+          "tags": [
+            "Devices"
+          ],
+          "summary": "Obtener un modelo por ID",
+          "description": "Retorna un modelo por su ID.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID del modelo"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Modelo obtenido correctamente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Model"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error al obtener el modelo"
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Devices"
+          ],
+          "summary": "Actualizar un modelo por ID",
+          "description": "Actualiza la información de un modelo específico.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID del modelo"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Modelo actualizado correctamente"
+            },
+            "500": {
+              "description": "Error al actualizar el modelo"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Devices"
+          ],
+          "summary": "Eliminar un modelo por ID",
+          "description": "Elimina un modelo específico por su ID.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID del modelo"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Modelo eliminado correctamente"
+            },
+            "500": {
+              "description": "Error al eliminar el modelo"
+            }
+          }
+        }
+      },
+      "/devices/model": {
+        "post": {
+          "tags": [
+            "Devices"
+          ],
+          "summary": "Crear un nuevo modelo",
+          "description": "Crea un nuevo modelo.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Modelo creado correctamente"
+            },
+            "500": {
+              "description": "Error al crear el modelo"
+            }
+          }
+        }
+      },
+      "/devices/sensor": {
+        "post": {
+          "tags": [
+            "Devices"
+          ],
+          "summary": "Crear un nuevo sensor",
+          "description": "Crea un nuevo dispositivo de tipo sensor.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sensor"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Sensor creado correctamente"
+            },
+            "500": {
+              "description": "Error al crear el sensor"
+            }
+          }
+        }
+      },
+      "/devices/sensor/{id}": {
+        "put": {
+          "tags": [
+            "Devices"
+          ],
+          "summary": "Actualizar un sensor por ID",
+          "description": "Actualiza la información de un sensor específico.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID del sensor"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sensor"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Sensor actualizado correctamente"
+            },
+            "500": {
+              "description": "Error al actualizar el sensor"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Devices"
+          ],
+          "summary": "Eliminar un sensor por ID",
+          "description": "Elimina un sensor específico por su ID.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID del sensor"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Sensor eliminado correctamente"
+            },
+            "500": {
+              "description": "Error al eliminar el sensor"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Camera": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "ID de la cámara"
+            },
+            "name": {
+              "type": "string",
+              "description": "Nombre de la cámara"
+            },
+            "model": {
+              "type": "string",
+              "description": "Modelo de la cámara"
+            }
+          }
+        },
+        "Model": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "ID del modelo"
+            },
+            "name": {
+              "type": "string",
+              "description": "Nombre del modelo"
+            }
+          }
+        },
+        "Sensor": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "ID del sensor"
+            },
+            "type": {
+              "type": "string",
+              "description": "Tipo de sensor"
+            },
+            "value": {
+              "type": "number",
+              "description": "Valor del sensor"
+            }
+          }
+        }
+      }
+    }
+  }
+  

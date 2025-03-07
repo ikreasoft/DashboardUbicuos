@@ -1,0 +1,34 @@
+.
+├── LICENSE
+├── app.js
+├── auxiliar
+│   ├── auditoria.js
+│   └── seguridad.js
+├── bin
+│   └── www.js
+├── models
+│   ├── Audit.js
+│   ├── Camera.js
+│   ├── Model.js
+│   ├── Permision.js
+│   ├── Record.js
+│   ├── Role.js
+│   ├── Sensor.js
+│   ├── SensorData.js
+│   ├── Session.js
+│   └── User.js
+├── package-lock.json
+├── package.json
+├── routes
+│   ├── devices.js
+│   ├── index.js
+│   ├── problemas.txt
+│   ├── record.js
+│   ├── records.js
+│   ├── roles.js
+│   ├── sessions.js
+│   └── users.js
+├── swagger.json
+└── tree.txt
+
+5 directories, 27 files
