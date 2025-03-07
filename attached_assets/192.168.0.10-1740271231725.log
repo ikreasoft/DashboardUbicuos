@@ -1,0 +1,86 @@
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+client:536 WebSocket connection to 'ws://192.168.0.10:5000/?token=2OHy0OZmGGbq' failed: 
+setupWebSocket @ client:536
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'ws://localhost:undefined/?token=2OHy0OZmGGbq' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+chunk-RPCDYKBN.js?v=e24e9e6b:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+logger.ts:17 [2025-02-23T00:40:02.253Z] [INFO] Application starting
+logger.ts:17 [2025-02-23T00:40:02.254Z] [INFO] Initializing router
+logger.ts:17 [2025-02-23T00:40:02.295Z] [INFO] Connecting to WebSocket {"url":"ws://192.168.0.10:5000/ws"}
+logger.ts:17 [2025-02-23T00:40:02.320Z] [INFO] WebSocket connected
+logger.ts:17 [2025-02-23T00:40:02.339Z] [INFO] WebSocket disconnected
+logger.ts:17 [2025-02-23T00:40:03.349Z] [INFO] Connecting to WebSocket {"url":"ws://192.168.0.10:5000/ws"}
+logger.ts:17 [2025-02-23T00:40:03.353Z] [INFO] WebSocket connected
+logger.ts:17 [2025-02-23T00:40:03.358Z] [INFO] WebSocket disconnected
+logger.ts:17 [2025-02-23T00:40:04.536Z] [INFO] Connecting to WebSocket {"url":"ws://192.168.0.10:5000/ws"}
+logger.ts:17 [2025-02-23T00:40:04.558Z] [INFO] WebSocket connected
+logger.ts:17 [2025-02-23T00:40:04.564Z] [INFO] WebSocket disconnected
+logger.ts:17 [2025-02-23T00:40:07.317Z] [INFO] Connecting to WebSocket {"url":"ws://192.168.0.10:5000/ws"}
+logger.ts:17 [2025-02-23T00:40:07.341Z] [INFO] WebSocket connected
+logger.ts:17 [2025-02-23T00:40:07.343Z] [INFO] WebSocket disconnected
+logger.ts:17 [2025-02-23T00:40:08.357Z] [INFO] Connecting to WebSocket {"url":"ws://192.168.0.10:5000/ws"}
+logger.ts:17 [2025-02-23T00:40:08.361Z] [INFO] WebSocket connected
+logger.ts:17 [2025-02-23T00:40:08.367Z] [INFO] WebSocket disconnected
+logger.ts:17 [2025-02-23T00:40:09.375Z] [INFO] Connecting to WebSocket {"url":"ws://192.168.0.10:5000/ws"}
+logger.ts:17 [2025-02-23T00:40:09.381Z] [INFO] WebSocket connected
+logger.ts:17 [2025-02-23T00:40:09.386Z] [INFO] WebSocket disconnected
+date-fns.js?v=e24e9e6b:2295 Uncaught RangeError: Invalid time value
+    at format (date-fns.js?v=e24e9e6b:2295:11)
+    at RecordingsPage (recordings-page.tsx:182:16)
+    at renderWithHooks (chunk-RPCDYKBN.js?v=e24e9e6b:11548:26)
+    at updateFunctionComponent (chunk-RPCDYKBN.js?v=e24e9e6b:14582:28)
+    at beginWork (chunk-RPCDYKBN.js?v=e24e9e6b:15924:22)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=e24e9e6b:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=e24e9e6b:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=e24e9e6b:3733:39)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=e24e9e6b:19765:15)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=e24e9e6b:19198:20)
+date-fns.js?v=e24e9e6b:2295 Uncaught RangeError: Invalid time value
+    at format (date-fns.js?v=e24e9e6b:2295:11)
+    at RecordingsPage (recordings-page.tsx:182:16)
+    at renderWithHooks (chunk-RPCDYKBN.js?v=e24e9e6b:11548:26)
+    at updateFunctionComponent (chunk-RPCDYKBN.js?v=e24e9e6b:14582:28)
+    at beginWork (chunk-RPCDYKBN.js?v=e24e9e6b:15924:22)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=e24e9e6b:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=e24e9e6b:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=e24e9e6b:3733:39)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=e24e9e6b:19765:15)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=e24e9e6b:19198:20)
+chunk-RPCDYKBN.js?v=e24e9e6b:14032 The above error occurred in the <RecordingsPage> component:
+
+    at RecordingsPage (http://192.168.0.10:5000/src/pages/recordings-page.tsx:37:43)
+    at div
+    at main
+    at div
+    at div
+    at MainLayout (http://192.168.0.10:5000/src/components/layout/main-layout.tsx:19:30)
+    at component
+    at ProtectedRoute (http://192.168.0.10:5000/src/lib/protected-route.tsx:22:3)
+    at Switch (http://192.168.0.10:5000/@fs/home/orangepi/Documentos/WebUbicuos/EnterpriseWorkflow/node_modules/.vite/deps/wouter.js?v=e24e9e6b:379:17)
+    at Router
+    at AuthProvider (http://192.168.0.10:5000/src/hooks/use-auth.tsx:26:32)
+    at QueryClientProvider (http://192.168.0.10:5000/@fs/home/orangepi/Documentos/WebUbicuos/EnterpriseWorkflow/node_modules/.vite/deps/@tanstack_react-query.js?v=e24e9e6b:2805:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-RPCDYKBN.js?v=e24e9e6b:14032
+chunk-RPCDYKBN.js?v=e24e9e6b:9129 Uncaught RangeError: Invalid time value
+    at format (date-fns.js?v=e24e9e6b:2295:11)
+    at RecordingsPage (recordings-page.tsx:182:16)
+    at renderWithHooks (chunk-RPCDYKBN.js?v=e24e9e6b:11548:26)
+    at updateFunctionComponent (chunk-RPCDYKBN.js?v=e24e9e6b:14582:28)
+    at beginWork (chunk-RPCDYKBN.js?v=e24e9e6b:15924:22)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=e24e9e6b:19753:22)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=e24e9e6b:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=e24e9e6b:19137:13)
+    at renderRootSync (chunk-RPCDYKBN.js?v=e24e9e6b:19116:15)
+    at recoverFromConcurrentError (chunk-RPCDYKBN.js?v=e24e9e6b:18736:28)

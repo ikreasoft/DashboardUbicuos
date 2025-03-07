@@ -20,34 +20,13 @@ export function SessionConfigDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { sensorMessages } = useMqtt();
+  const { sensorCount, sensors } = useMqtt();
   const [selectedDevices, setSelectedDevices] = useState<string[]>([]);
 
   // Obtener cámaras del backend
   const { data: cameras = [] } = useQuery({
     queryKey: ['/api/cameras'],
   });
-
-  // Extraer sensores únicos de los mensajes MQTT
-  const sensors = Array.from(new Set(
-    sensorMessages
-      .map(msg => msg.topic.replace('zigbee2mqtt/', ''))
-      .filter(name => !name.includes('bridge'))
-  )).map(name => ({
-    id: name,
-    name,
-    type: 'sensor' as const
-  }));
-
-  // Combinar dispositivos
-  const devices: Device[] = [
-    ...sensors,
-    ...cameras.map((cam: any) => ({
-      id: cam.id,
-      name: cam.name,
-      type: 'camera' as const
-    }))
-  ];
 
   const handleDeviceToggle = (deviceId: string) => {
     setSelectedDevices(prev => 
@@ -71,17 +50,30 @@ export function SessionConfigDialog({
         <ScrollArea className="h-[300px] pr-4">
           <div className="space-y-4">
             <div>
-              <h4 className="mb-2 font-medium">Sensores</h4>
-              {sensors.map((device) => (
-                <div key={device.id} className="flex items-center space-x-2 mb-2">
-                  <Checkbox
-                    id={device.id}
-                    checked={selectedDevices.includes(device.id)}
-                    onCheckedChange={() => handleDeviceToggle(device.id)}
-                  />
-                  <label htmlFor={device.id}>{device.name}</label>
+              <h4 className="mb-2 font-medium">Sensores ({sensorCount})</h4>
+              {sensorCount > 0 ? (
+                <div className="space-y-2">
+                  {sensors?.map((sensor: any) => (
+                    <div key={sensor.ieee_addr} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={sensor.ieee_addr}
+                        checked={selectedDevices.includes(sensor.ieee_addr)}
+                        onCheckedChange={() => handleDeviceToggle(sensor.ieee_addr)}
+                      />
+                      <label 
+                        htmlFor={sensor.ieee_addr}
+                        className="text-sm cursor-pointer"
+                      >
+                        {sensor.friendly_name}
+                      </label>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <p className="text-sm text-muted-foreground mb-4">
+                  Esperando conexión con Zigbee2MQTT...
+                </p>
+              )}
             </div>
             <div>
               <h4 className="mb-2 font-medium">Cámaras</h4>
@@ -92,7 +84,9 @@ export function SessionConfigDialog({
                     checked={selectedDevices.includes(camera.id)}
                     onCheckedChange={() => handleDeviceToggle(camera.id)}
                   />
-                  <label htmlFor={camera.id}>{camera.name}</label>
+                  <label htmlFor={camera.id} className="text-sm cursor-pointer">
+                    {camera.name}
+                  </label>
                 </div>
               ))}
             </div>

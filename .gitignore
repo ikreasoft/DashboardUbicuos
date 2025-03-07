@@ -4,11 +4,8 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
-.replit
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-*.mp4
-attached_assets/

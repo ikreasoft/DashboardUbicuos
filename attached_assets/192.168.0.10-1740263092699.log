@@ -1,0 +1,61 @@
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+client:536 WebSocket connection to 'ws://192.168.0.10:5000/?token=QE2povAbNNtB' failed: 
+setupWebSocket @ client:536
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'ws://localhost:undefined/?token=QE2povAbNNtB' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+chunk-RPCDYKBN.js?v=0fc1cf4b:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+logger.ts:17 [2025-02-22T22:23:49.218Z] [INFO] Application starting
+logger.ts:17 [2025-02-22T22:23:49.219Z] [INFO] Initializing router
+api/user:1 
+            
+            
+           Failed to load resource: the server responded with a status of 401 (Unauthorized)
+chunk-RPCDYKBN.js?v=0fc1cf4b:521 Warning: Cannot update a component (`Switch`) while rendering a different component (`AuthPage`). To locate the bad setState() call inside `AuthPage`, follow the stack trace as described in https://reactjs.org/link/setstate-in-render
+    at AuthPage (http://192.168.0.10:5000/src/pages/auth-page.tsx:44:53)
+    at Route (http://192.168.0.10:5000/@fs/home/orangepi/Documentos/WebUbicuos/EnterpriseWorkflow/node_modules/.vite/deps/wouter.js?v=0fc1cf4b:323:16)
+    at Switch (http://192.168.0.10:5000/@fs/home/orangepi/Documentos/WebUbicuos/EnterpriseWorkflow/node_modules/.vite/deps/wouter.js?v=0fc1cf4b:379:17)
+    at Router
+    at AuthProvider (http://192.168.0.10:5000/src/hooks/use-auth.tsx:26:32)
+    at QueryClientProvider (http://192.168.0.10:5000/@fs/home/orangepi/Documentos/WebUbicuos/EnterpriseWorkflow/node_modules/.vite/deps/@tanstack_react-query.js?v=0fc1cf4b:2805:3)
+    at App
+printWarning @ chunk-RPCDYKBN.js?v=0fc1cf4b:521
+chunk-RPCDYKBN.js?v=0fc1cf4b:11595 Uncaught Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at renderWithHooks (chunk-RPCDYKBN.js?v=0fc1cf4b:11595:19)
+    at updateFunctionComponent (chunk-RPCDYKBN.js?v=0fc1cf4b:14582:28)
+    at beginWork (chunk-RPCDYKBN.js?v=0fc1cf4b:15924:22)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=0fc1cf4b:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=0fc1cf4b:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=0fc1cf4b:3733:39)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=0fc1cf4b:19765:15)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=0fc1cf4b:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=0fc1cf4b:19137:13)
+    at renderRootSync (chunk-RPCDYKBN.js?v=0fc1cf4b:19116:15)
+chunk-RPCDYKBN.js?v=0fc1cf4b:11595 Uncaught Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at renderWithHooks (chunk-RPCDYKBN.js?v=0fc1cf4b:11595:19)
+    at updateFunctionComponent (chunk-RPCDYKBN.js?v=0fc1cf4b:14582:28)
+    at beginWork (chunk-RPCDYKBN.js?v=0fc1cf4b:15924:22)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=0fc1cf4b:19753:22)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=0fc1cf4b:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=0fc1cf4b:19137:13)
+    at renderRootSync (chunk-RPCDYKBN.js?v=0fc1cf4b:19116:15)
+    at performSyncWorkOnRoot (chunk-RPCDYKBN.js?v=0fc1cf4b:18874:28)
+    at flushSyncCallbacks (chunk-RPCDYKBN.js?v=0fc1cf4b:9119:30)
+    at chunk-RPCDYKBN.js?v=0fc1cf4b:18627:21
+logger.ts:17 [2025-02-22T22:23:53.270Z] [INFO] Connecting to WebSocket {"url":"ws://192.168.0.10:5000/ws"}
+logger.ts:17 [2025-02-22T22:23:53.332Z] [INFO] WebSocket connected
+logger.ts:17 [2025-02-22T22:23:53.382Z] [INFO] WebSocket disconnected
+logger.ts:17 [2025-02-22T22:23:56.578Z] [INFO] Opening system status page
+logger.ts:17 [2025-02-22T22:23:58.511Z] [INFO] Connecting to WebSocket {"url":"ws://192.168.0.10:5000/ws"}
+logger.ts:17 [2025-02-22T22:23:58.545Z] [INFO] WebSocket connected
+logger.ts:17 [2025-02-22T22:23:58.546Z] [INFO] WebSocket disconnected
+logger.ts:17 [2025-02-22T22:24:11.658Z] [INFO] Connecting to WebSocket {"url":"ws://192.168.0.10:5000/ws"}
+logger.ts:17 [2025-02-22T22:24:11.692Z] [INFO] WebSocket connected
+logger.ts:17 [2025-02-22T22:24:11.698Z] [INFO] WebSocket disconnected

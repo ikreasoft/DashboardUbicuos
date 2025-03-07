@@ -1,26 +1,4 @@
 {
-  "1": {
-    "name": "192.168.0.31",
-    "ipAddress": "192.168.0.31",
-    "username": "admin",
-    "password": "admin123",
-    "streamPath": "h264Preview_01_main",
-    "port": "554",
-    "userId": 1,
-    "id": 1,
-    "isRecording": false,
-    "status": "disconnected",
-    "lastSeen": null,
-    "metrics": {
-      "fps": 0,
-      "bitrate": 0,
-      "resolution": "",
-      "uptime": 0,
-      "connectionErrors": 0,
-      "lastErrorTime": null,
-      "lastErrorMessage": null
-    }
-  },
   "2": {
     "name": "c33",
     "ipAddress": "192.168.0.33",
@@ -32,7 +10,51 @@
     "id": 2,
     "isRecording": false,
     "status": "disconnected",
-    "lastSeen": null,
+    "lastSeen": "2025-03-07T06:03:07.839Z",
+    "metrics": {
+      "fps": 0,
+      "bitrate": 0,
+      "resolution": "",
+      "uptime": 0,
+      "connectionErrors": 0,
+      "lastErrorTime": null,
+      "lastErrorMessage": null
+    }
+  },
+  "3": {
+    "name": "c31",
+    "ipAddress": "192.168.0.31",
+    "username": "admin",
+    "password": "admin123",
+    "streamPath": "h264Preview_01_main",
+    "port": "554",
+    "userId": 1,
+    "id": 3,
+    "isRecording": false,
+    "status": "disconnected",
+    "lastSeen": "2025-03-07T06:03:07.840Z",
+    "metrics": {
+      "fps": 0,
+      "bitrate": 0,
+      "resolution": "",
+      "uptime": 0,
+      "connectionErrors": 0,
+      "lastErrorTime": null,
+      "lastErrorMessage": null
+    }
+  },
+  "4": {
+    "name": "c35",
+    "ipAddress": "192.168.0.35",
+    "username": "admin",
+    "password": "admin123",
+    "streamPath": "h264Preview_01_main",
+    "port": "554",
+    "userId": 1,
+    "id": 4,
+    "isRecording": false,
+    "status": "disconnected",
+    "lastSeen": "2025-03-07T06:03:07.840Z",
     "metrics": {
       "fps": 0,
       "bitrate": 0,

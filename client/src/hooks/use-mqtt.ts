@@ -2,26 +2,14 @@ import { useState, useEffect } from 'react';
 import mqtt from 'mqtt';
 import { logger } from '@/lib/services/logger';
 
-interface MQTTMessage {
-  topic: string;
-  payload: any;
-  timestamp: Date;
-}
-
 export default function useMqtt() {
   const [sensorCount, setSensorCount] = useState(0);
-  const [isConnected, setIsConnected] = useState(false);
-  const [connectionError, setConnectionError] = useState<string | null>(null);
-  const [sensorMessages, setSensorMessages] = useState<MQTTMessage[]>([]);
+  const [sensors, setSensors] = useState<any[]>([]);
 
   useEffect(() => {
     const connect = () => {
-      // Usar TCP directo en lugar de WebSocket
-      const mqttUrl = 'mqtt://localhost:1883';
-
-      logger.info('Connecting to MQTT broker:', mqttUrl);
-
-      const client = mqtt.connect(mqttUrl, {
+      // Usar WebSocket para conexión desde el navegador
+      const client = mqtt.connect('ws://localhost:9001', {
         clientId: `mqttjs_${Math.random().toString(16).substr(2, 8)}`,
         clean: true,
         reconnectPeriod: 5000,
@@ -30,14 +18,11 @@ export default function useMqtt() {
 
       client.on('connect', () => {
         logger.info('Connected to MQTT broker');
-        setIsConnected(true);
-        setConnectionError(null);
 
-        // Suscribirse a todos los topics de Zigbee2MQTT
-        client.subscribe('zigbee2mqtt/#', (err) => {
+        // Suscribirse a la lista de dispositivos
+        client.subscribe('zigbee2mqtt/bridge/devices', (err) => {
           if (err) {
-            logger.error('Error subscribing to topics:', err);
-            setConnectionError('Error al suscribirse a los tópicos');
+            logger.error('Error subscribing to devices topic:', err);
           }
         });
 
@@ -47,45 +32,19 @@ export default function useMqtt() {
 
       client.on('message', (topic, message) => {
         try {
-          const payload = JSON.parse(message.toString());
-
-          // Si es la respuesta con la lista de dispositivos
           if (topic === 'zigbee2mqtt/bridge/devices') {
-            const sensors = Array.isArray(payload) ? payload.filter((device: any) => 
+            const payload = JSON.parse(message.toString());
+            // Contar sensores excluyendo bridge y coordinator
+            const filteredSensors = Object.values(payload).filter((device: any) => 
               !device.friendly_name.includes('bridge') && 
               !device.friendly_name.includes('coordinator')
-            ) : [];
-            setSensorCount(sensors.length);
+            );
+            setSensorCount(filteredSensors.length);
+            setSensors(filteredSensors);
           }
-
-          // Almacenar mensaje para otros usos
-          setSensorMessages(prev => [
-            ...prev.slice(-49), // Mantener solo los últimos 50 mensajes
-            {
-              topic,
-              payload,
-              timestamp: new Date()
-            }
-          ]);
         } catch (error) {
-          logger.error('Error al procesar mensaje MQTT:', error);
+          logger.error('Error processing MQTT message:', error);
         }
-      });
-
-      client.on('error', (err) => {
-        logger.error('MQTT connection error:', err);
-        setConnectionError(err.message);
-        setIsConnected(false);
-      });
-
-      client.on('close', () => {
-        logger.info('MQTT connection closed');
-        setIsConnected(false);
-      });
-
-      client.on('offline', () => {
-        logger.info('MQTT client is offline');
-        setIsConnected(false);
       });
 
       return () => {
@@ -97,9 +56,7 @@ export default function useMqtt() {
   }, []);
 
   return {
-    isConnected,
-    connectionError,
     sensorCount,
-    sensorMessages
+    sensors
   };
 }

@@ -1,0 +1,187 @@
+chunk-SXRIVT2P.js?v=aac5d29b:21609 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+logger.ts:17 [2025-03-07T04:20:32.763Z] [INFO] Application starting
+logger.ts:17 [2025-03-07T04:20:32.766Z] [INFO] Initializing router
+session-config-dialog.tsx:34 Uncaught TypeError: Cannot read properties of undefined (reading 'map')
+    at SessionConfigDialog (session-config-dialog.tsx:34:8)
+    at renderWithHooks (chunk-SXRIVT2P.js?v=aac5d29b:11596:26)
+    at mountIndeterminateComponent (chunk-SXRIVT2P.js?v=aac5d29b:14974:21)
+    at beginWork (chunk-SXRIVT2P.js?v=aac5d29b:15962:22)
+    at HTMLUnknownElement.callCallback2 (chunk-SXRIVT2P.js?v=aac5d29b:3680:22)
+    at Object.invokeGuardedCallbackDev (chunk-SXRIVT2P.js?v=aac5d29b:3705:24)
+    at invokeGuardedCallback (chunk-SXRIVT2P.js?v=aac5d29b:3739:39)
+    at beginWork$1 (chunk-SXRIVT2P.js?v=aac5d29b:19818:15)
+    at performUnitOfWork (chunk-SXRIVT2P.js?v=aac5d29b:19251:20)
+    at workLoopSync (chunk-SXRIVT2P.js?v=aac5d29b:19190:13)
+SessionConfigDialog @ session-config-dialog.tsx:34
+renderWithHooks @ chunk-SXRIVT2P.js?v=aac5d29b:11596
+mountIndeterminateComponent @ chunk-SXRIVT2P.js?v=aac5d29b:14974
+beginWork @ chunk-SXRIVT2P.js?v=aac5d29b:15962
+callCallback2 @ chunk-SXRIVT2P.js?v=aac5d29b:3680
+invokeGuardedCallbackDev @ chunk-SXRIVT2P.js?v=aac5d29b:3705
+invokeGuardedCallback @ chunk-SXRIVT2P.js?v=aac5d29b:3739
+beginWork$1 @ chunk-SXRIVT2P.js?v=aac5d29b:19818
+performUnitOfWork @ chunk-SXRIVT2P.js?v=aac5d29b:19251
+workLoopSync @ chunk-SXRIVT2P.js?v=aac5d29b:19190
+renderRootSync @ chunk-SXRIVT2P.js?v=aac5d29b:19169
+performSyncWorkOnRoot @ chunk-SXRIVT2P.js?v=aac5d29b:18927
+flushSyncCallbacks @ chunk-SXRIVT2P.js?v=aac5d29b:9166
+(anónimo) @ chunk-SXRIVT2P.js?v=aac5d29b:18677
+session-config-dialog.tsx:34 Uncaught TypeError: Cannot read properties of undefined (reading 'map')
+    at SessionConfigDialog (session-config-dialog.tsx:34:8)
+    at renderWithHooks (chunk-SXRIVT2P.js?v=aac5d29b:11596:26)
+    at mountIndeterminateComponent (chunk-SXRIVT2P.js?v=aac5d29b:14974:21)
+    at beginWork (chunk-SXRIVT2P.js?v=aac5d29b:15962:22)
+    at HTMLUnknownElement.callCallback2 (chunk-SXRIVT2P.js?v=aac5d29b:3680:22)
+    at Object.invokeGuardedCallbackDev (chunk-SXRIVT2P.js?v=aac5d29b:3705:24)
+    at invokeGuardedCallback (chunk-SXRIVT2P.js?v=aac5d29b:3739:39)
+    at beginWork$1 (chunk-SXRIVT2P.js?v=aac5d29b:19818:15)
+    at performUnitOfWork (chunk-SXRIVT2P.js?v=aac5d29b:19251:20)
+    at workLoopSync (chunk-SXRIVT2P.js?v=aac5d29b:19190:13)
+SessionConfigDialog @ session-config-dialog.tsx:34
+renderWithHooks @ chunk-SXRIVT2P.js?v=aac5d29b:11596
+mountIndeterminateComponent @ chunk-SXRIVT2P.js?v=aac5d29b:14974
+beginWork @ chunk-SXRIVT2P.js?v=aac5d29b:15962
+callCallback2 @ chunk-SXRIVT2P.js?v=aac5d29b:3680
+invokeGuardedCallbackDev @ chunk-SXRIVT2P.js?v=aac5d29b:3705
+invokeGuardedCallback @ chunk-SXRIVT2P.js?v=aac5d29b:3739
+beginWork$1 @ chunk-SXRIVT2P.js?v=aac5d29b:19818
+performUnitOfWork @ chunk-SXRIVT2P.js?v=aac5d29b:19251
+workLoopSync @ chunk-SXRIVT2P.js?v=aac5d29b:19190
+renderRootSync @ chunk-SXRIVT2P.js?v=aac5d29b:19169
+recoverFromConcurrentError @ chunk-SXRIVT2P.js?v=aac5d29b:18786
+performSyncWorkOnRoot @ chunk-SXRIVT2P.js?v=aac5d29b:18932
+flushSyncCallbacks @ chunk-SXRIVT2P.js?v=aac5d29b:9166
+(anónimo) @ chunk-SXRIVT2P.js?v=aac5d29b:18677
+chunk-SXRIVT2P.js?v=aac5d29b:14080 The above error occurred in the <SessionConfigDialog> component:
+
+    at SessionConfigDialog (http://localhost:5000/src/components/session-config-dialog.tsx?t=1741321225952:26:3)
+    at main
+    at div
+    at HomePage (http://localhost:5000/src/pages/home-page.tsx?t=1741321225952:28:36)
+    at div
+    at main
+    at div
+    at div
+    at MainLayout (http://localhost:5000/src/components/layout/main-layout.tsx:19:30)
+    at component
+    at ProtectedRoute (http://localhost:5000/src/lib/protected-route.tsx:22:3)
+    at Switch (http://localhost:5000/@fs/home/mforum/livingLab/EnterpriseWorkflow-2/node_modules/.vite/deps/wouter.js?v=aac5d29b:379:17)
+    at Router
+    at AuthProvider (http://localhost:5000/src/hooks/use-auth.tsx:26:32)
+    at QueryClientProvider (http://localhost:5000/@fs/home/mforum/livingLab/EnterpriseWorkflow-2/node_modules/.vite/deps/@tanstack_react-query.js?v=aac5d29b:2805:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-SXRIVT2P.js?v=aac5d29b:14080
+update.callback @ chunk-SXRIVT2P.js?v=aac5d29b:14100
+callCallback @ chunk-SXRIVT2P.js?v=aac5d29b:11296
+commitUpdateQueue @ chunk-SXRIVT2P.js?v=aac5d29b:11313
+commitLayoutEffectOnFiber @ chunk-SXRIVT2P.js?v=aac5d29b:17141
+commitLayoutMountEffects_complete @ chunk-SXRIVT2P.js?v=aac5d29b:18030
+commitLayoutEffects_begin @ chunk-SXRIVT2P.js?v=aac5d29b:18019
+commitLayoutEffects @ chunk-SXRIVT2P.js?v=aac5d29b:17970
+commitRootImpl @ chunk-SXRIVT2P.js?v=aac5d29b:19406
+commitRoot @ chunk-SXRIVT2P.js?v=aac5d29b:19330
+performSyncWorkOnRoot @ chunk-SXRIVT2P.js?v=aac5d29b:18948
+flushSyncCallbacks @ chunk-SXRIVT2P.js?v=aac5d29b:9166
+(anónimo) @ chunk-SXRIVT2P.js?v=aac5d29b:18677
+chunk-SXRIVT2P.js?v=aac5d29b:9176 Uncaught TypeError: Cannot read properties of undefined (reading 'map')
+    at SessionConfigDialog (session-config-dialog.tsx:34:8)
+    at renderWithHooks (chunk-SXRIVT2P.js?v=aac5d29b:11596:26)
+    at mountIndeterminateComponent (chunk-SXRIVT2P.js?v=aac5d29b:14974:21)
+    at beginWork (chunk-SXRIVT2P.js?v=aac5d29b:15962:22)
+    at beginWork$1 (chunk-SXRIVT2P.js?v=aac5d29b:19806:22)
+    at performUnitOfWork (chunk-SXRIVT2P.js?v=aac5d29b:19251:20)
+    at workLoopSync (chunk-SXRIVT2P.js?v=aac5d29b:19190:13)
+    at renderRootSync (chunk-SXRIVT2P.js?v=aac5d29b:19169:15)
+    at recoverFromConcurrentError (chunk-SXRIVT2P.js?v=aac5d29b:18786:28)
+    at performSyncWorkOnRoot (chunk-SXRIVT2P.js?v=aac5d29b:18932:28)
+SessionConfigDialog @ session-config-dialog.tsx:34
+renderWithHooks @ chunk-SXRIVT2P.js?v=aac5d29b:11596
+mountIndeterminateComponent @ chunk-SXRIVT2P.js?v=aac5d29b:14974
+beginWork @ chunk-SXRIVT2P.js?v=aac5d29b:15962
+beginWork$1 @ chunk-SXRIVT2P.js?v=aac5d29b:19806
+performUnitOfWork @ chunk-SXRIVT2P.js?v=aac5d29b:19251
+workLoopSync @ chunk-SXRIVT2P.js?v=aac5d29b:19190
+renderRootSync @ chunk-SXRIVT2P.js?v=aac5d29b:19169
+recoverFromConcurrentError @ chunk-SXRIVT2P.js?v=aac5d29b:18786
+performSyncWorkOnRoot @ chunk-SXRIVT2P.js?v=aac5d29b:18932
+flushSyncCallbacks @ chunk-SXRIVT2P.js?v=aac5d29b:9166
+(anónimo) @ chunk-SXRIVT2P.js?v=aac5d29b:18677
+client:756 WebSocket connection to 'ws://localhost:5000/?token=_CS9SHAsA4pE' failed: 
+createConnection @ client:756
+connect @ client:427
+connect @ client:765
+connect @ client:280
+connect @ client:373
+(anónimo) @ client:862
+client:769 WebSocket connection to 'ws://localhost:5173/?token=_CS9SHAsA4pE' failed: 
+createConnection @ client:769
+connect @ client:427
+connect @ client:776
+client:784 [vite] failed to connect to websocket.
+your current setup:
+  (browser) localhost:5000/ <--[HTTP]--> localhost:5173/ (server)
+  (browser) localhost:5000/ <--[WebSocket (failing)]--> localhost:5173/ (server)
+Check out your Vite / network configuration and https://vite.dev/config/server-options.html#server-hmr .
+connect @ client:784
+await in connect
+connect @ client:280
+connect @ client:373
+(anónimo) @ client:862
+client:836 [vite] TypeError: Cannot read properties of undefined (reading 'send')
+    at Object.send (client:473:10)
+    at Object.send (client:803:21)
+    at Object.send (client:316:24)
+    at Object.send (client:407:33)
+error @ client:836
+(anónimo) @ client:134
+Promise.catch
+send @ client:133
+send @ client:97
+sendError @ cameras:108
+(anónimo) @ cameras:112
+invokeGuardedCallbackDev @ chunk-SXRIVT2P.js?v=aac5d29b:3705
+invokeGuardedCallback @ chunk-SXRIVT2P.js?v=aac5d29b:3739
+beginWork$1 @ chunk-SXRIVT2P.js?v=aac5d29b:19818
+performUnitOfWork @ chunk-SXRIVT2P.js?v=aac5d29b:19251
+workLoopSync @ chunk-SXRIVT2P.js?v=aac5d29b:19190
+renderRootSync @ chunk-SXRIVT2P.js?v=aac5d29b:19169
+performSyncWorkOnRoot @ chunk-SXRIVT2P.js?v=aac5d29b:18927
+flushSyncCallbacks @ chunk-SXRIVT2P.js?v=aac5d29b:9166
+(anónimo) @ chunk-SXRIVT2P.js?v=aac5d29b:18677
+client:836 [vite] TypeError: Cannot read properties of undefined (reading 'send')
+    at Object.send (client:473:10)
+    at Object.send (client:803:21)
+    at Object.send (client:316:24)
+    at Object.send (client:407:33)
+error @ client:836
+(anónimo) @ client:134
+Promise.catch
+send @ client:133
+send @ client:97
+sendError @ cameras:108
+(anónimo) @ cameras:112
+invokeGuardedCallbackDev @ chunk-SXRIVT2P.js?v=aac5d29b:3705
+invokeGuardedCallback @ chunk-SXRIVT2P.js?v=aac5d29b:3739
+beginWork$1 @ chunk-SXRIVT2P.js?v=aac5d29b:19818
+performUnitOfWork @ chunk-SXRIVT2P.js?v=aac5d29b:19251
+workLoopSync @ chunk-SXRIVT2P.js?v=aac5d29b:19190
+renderRootSync @ chunk-SXRIVT2P.js?v=aac5d29b:19169
+recoverFromConcurrentError @ chunk-SXRIVT2P.js?v=aac5d29b:18786
+performSyncWorkOnRoot @ chunk-SXRIVT2P.js?v=aac5d29b:18932
+flushSyncCallbacks @ chunk-SXRIVT2P.js?v=aac5d29b:9166
+(anónimo) @ chunk-SXRIVT2P.js?v=aac5d29b:18677
+client:836 [vite] TypeError: Cannot read properties of undefined (reading 'send')
+    at Object.send (client:473:10)
+    at Object.send (client:803:21)
+    at Object.send (client:316:24)
+    at Object.send (client:407:33)
+error @ client:836
+(anónimo) @ client:134
+Promise.catch
+send @ client:133
+send @ client:97
+sendError @ cameras:108
+(anónimo) @ cameras:112

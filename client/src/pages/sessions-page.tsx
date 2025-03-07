@@ -1,12 +1,13 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Recording, Camera, Sensor } from "@shared/schema";
+import { Recording } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, Play, Download } from "lucide-react";
+import { Loader2, Play, Download, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useState } from "react";
+import { Link } from "wouter";
 import {
   Select,
   SelectContent,
@@ -14,19 +15,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useMqtt from "@/hooks/use-mqtt";
 
 export default function SessionsPage() {
   const { data: recordings, isLoading: recordingsLoading } = useQuery<Recording[]>({
     queryKey: ["/api/recordings"],
   });
 
-  const { data: cameras } = useQuery<Camera[]>({
+  const { data: cameras } = useQuery({
     queryKey: ["/api/cameras"],
   });
 
-  const { data: sensors } = useQuery<Sensor[]>({
-    queryKey: ["/api/sensors"],
-  });
+  const { sensors } = useMqtt();
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -44,37 +44,31 @@ export default function SessionsPage() {
         throw new Error('No hay dispositivos disponibles para iniciar la sesión');
       }
 
-      // Crear una nueva sesión con los dispositivos seleccionados
-      const response = await fetch('/api/sessions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          duration: sessionDuration,
-          devices: {
-            cameras: cameras?.map(c => ({
-              id: c.id,
-              prefix: c.recordingPrefix || `cam${c.id}`
-            })) || [],
-            sensors: sensors?.map(s => s.id) || []
-          }
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al crear la sesión');
+      // Iniciar grabación para todas las cámaras
+      for (const camera of cameras || []) {
+        if (camera.status === 'connected' && !camera.isRecording) {
+          await apiRequest("PATCH", `/api/cameras/${camera.id}`, {
+            isRecording: true,
+          });
+        }
       }
 
-      const session = await response.json();
-
-      // Iniciar la grabación
-      await fetch(`/api/sessions/${session.id}/start`, {
-        method: 'POST'
+      // Crear una nueva sesión con los dispositivos seleccionados
+      const response = await apiRequest("POST", "/api/sessions", {
+        duration: sessionDuration,
+        startTime: new Date().toISOString(),
+        devices: {
+          cameras: cameras?.map(c => ({
+            id: c.id,
+            prefix: c.recordingPrefix || `cam${c.id}`
+          })) || [],
+          sensors: sensors?.map((s: any) => s.ieee_addr) || []
+        }
       });
 
       // Actualizar la lista de grabaciones
       await queryClient.invalidateQueries({ queryKey: ["/api/recordings"] });
+      await queryClient.invalidateQueries({ queryKey: ["/api/cameras"] });
 
       toast({
         title: "Sesión iniciada",
@@ -93,10 +87,7 @@ export default function SessionsPage() {
 
   const downloadSessionData = async (sessionId: number) => {
     try {
-      const response = await fetch(`/api/sessions/${sessionId}/download`, {
-        method: 'GET',
-      });
-
+      const response = await fetch(`/api/sessions/${sessionId}/download`);
       if (!response.ok) {
         throw new Error(`Error al descargar: ${response.statusText}`);
       }
@@ -170,22 +161,28 @@ export default function SessionsPage() {
           <Card key={recording.id} className="p-4">
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="font-medium">
-                  {recording.title || `Sesión ${recording.id}`}
-                </h3>
+                <Link href={`/sessions/${recording.id}`}>
+                  <a className="text-lg font-medium hover:underline">
+                    {recording.title || `Sesión ${recording.id}`}
+                  </a>
+                </Link>
                 <p className="text-sm text-muted-foreground">
                   {format(new Date(recording.startTime), "PPpp")}
                 </p>
+                {recording.duration > 0 && recording.startTime && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                    <Clock className="h-4 w-4" />
+                    <span>Duración: {Math.round(recording.duration / 60)} minutos</span>
+                  </div>
+                )}
               </div>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => downloadSessionData(recording.id)}
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
-              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => downloadSessionData(recording.id)}
+              >
+                <Download className="h-4 w-4" />
+              </Button>
             </div>
           </Card>
         ))}

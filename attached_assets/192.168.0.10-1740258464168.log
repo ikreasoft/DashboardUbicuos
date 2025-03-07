@@ -1,0 +1,38 @@
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+Unchecked runtime.lastError: The message port closed before a response was received.
+client:536 WebSocket connection to 'ws://192.168.0.10:5000/?token=ts5sTbfr5Q3J' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'ws://localhost:undefined/?token=ts5sTbfr5Q3J' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+chunk-RPCDYKBN.js?v=5a95fc84:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+logger.ts:17 [2025-02-22T21:07:19.785Z] [INFO] Application starting
+logger.ts:17 [2025-02-22T21:07:19.790Z] [INFO] Initializing router
+camera-card.tsx:40 Camera metrics: {fps: 0, bitrate: 0, resolution: '', uptime: 0, connectionErrors: 0, …}
+camera-card.tsx:41 Camera status: disconnected
+camera-card.tsx:40 Camera metrics: {fps: 0, bitrate: 0, resolution: '', uptime: 0, connectionErrors: 0, …}
+camera-card.tsx:41 Camera status: disconnected
+logger.ts:17 [2025-02-22T21:07:20.035Z] [INFO] WebSocket connected
+logger.ts:17 [2025-02-22T21:07:20.042Z] [INFO] WebSocket disconnected
+camera-card.tsx:40 Camera metrics: {fps: 0, bitrate: 0, resolution: '', uptime: 0, connectionErrors: 0, …}
+camera-card.tsx:41 Camera status: disconnected
+camera-card.tsx:40 Camera metrics: {fps: 0, bitrate: 0, resolution: '', uptime: 0, connectionErrors: 0, …}
+camera-card.tsx:41 Camera status: disconnected
+camera-card.tsx:40 Camera metrics: {fps: 0, bitrate: 0, resolution: '', uptime: 0, connectionErrors: 0, …}
+camera-card.tsx:41 Camera status: disconnected
+camera-card.tsx:40 Camera metrics: {fps: 0, bitrate: 0, resolution: '', uptime: 0, connectionErrors: 0, …}
+camera-card.tsx:41 Camera status: disconnected
+logger.ts:17 [2025-02-22T21:07:21.983Z] [INFO] Fetching recordings {}
+logger.ts:17 [2025-02-22T21:07:22.023Z] [INFO] Fetching recordings {"count":12}
+logger.ts:17 [2025-02-22T21:07:23.981Z] [INFO] WebSocket connected
+logger.ts:17 [2025-02-22T21:07:23.984Z] [INFO] WebSocket disconnected

@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Copy, Loader2, Power, Trash, Video, Edit, Check, X } from "lucide-react";
+import { Copy, Loader2, Trash, Edit, Check, X } from "lucide-react";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -33,74 +33,12 @@ export default function CameraCard({ camera, onClone }: CameraCardProps) {
   const { toast } = useToast();
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [isTogglingRecording, setIsTogglingRecording] = useState(false);
   const [showPrefixInput, setShowPrefixInput] = useState(false);
   const [prefix, setPrefix] = useState(camera.recordingPrefix || '');
 
   const { data: recordings } = useQuery<Recording[]>({
     queryKey: [`/api/cameras/${camera.id}/recordings`],
   });
-
-  const toggleRecording = async () => {
-    if (camera.status !== 'connected') {
-      toast({
-        title: "Error",
-        description: "No se puede iniciar la grabación: la cámara no está conectada",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsTogglingRecording(true);
-    try {
-      await apiRequest("PATCH", `/api/cameras/${camera.id}`, {
-        isRecording: !camera.isRecording,
-      });
-      queryClient.invalidateQueries({ queryKey: ["/api/cameras"] });
-      toast({
-        title: camera.isRecording ? "Grabación detenida" : "Grabación iniciada",
-        description: `La cámara ${camera.name} ${camera.isRecording ? "ya no está" : "está"} grabando`,
-      });
-    } catch (error) {
-      console.error("Error al cambiar estado de grabación:", error);
-      toast({
-        title: "Error",
-        description: "No se pudo cambiar el estado de grabación",
-        variant: "destructive",
-      });
-    } finally {
-      setIsTogglingRecording(false);
-    }
-  };
-
-  // Función para obtener el color del LED según el estado
-  const getStatusIndicator = () => {
-    const status = camera.status || 'disconnected';
-    switch (status) {
-      case 'connected':
-        return {
-          color: 'bg-green-500',
-          text: 'Conectada'
-        };
-      case 'error':
-        return {
-          color: 'bg-red-500',
-          text: 'Error'
-        };
-      case 'connecting':
-        return {
-          color: 'bg-yellow-500',
-          text: 'Conectando'
-        };
-      default:
-        return {
-          color: 'bg-gray-500',
-          text: 'Desconectada'
-        };
-    }
-  };
-
-  const statusIndicator = getStatusIndicator();
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -163,24 +101,41 @@ export default function CameraCard({ camera, onClone }: CameraCardProps) {
 
   const latestRecording = getLatestRecording();
 
+  // Get status indicator
+  const getStatusIndicator = () => {
+    const status = camera.status || 'disconnected';
+    switch (status) {
+      case 'connected':
+        return {
+          color: 'bg-green-500',
+          text: 'Conectada'
+        };
+      case 'error':
+        return {
+          color: 'bg-red-500',
+          text: 'Error'
+        };
+      case 'connecting':
+        return {
+          color: 'bg-yellow-500',
+          text: 'Conectando'
+        };
+      default:
+        return {
+          color: 'bg-gray-500',
+          text: 'Desconectada'
+        };
+    }
+  };
+
+  const statusIndicator = getStatusIndicator();
+
   return (
     <>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-xl">{camera.name}</CardTitle>
           <div className="flex gap-2">
-            <Button
-              variant={camera.isRecording ? "destructive" : "default"}
-              size="sm"
-              onClick={toggleRecording}
-              disabled={isTogglingRecording || camera.status !== 'connected'}
-            >
-              {isTogglingRecording ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Power className="h-4 w-4" />
-              )}
-            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -204,17 +159,18 @@ export default function CameraCard({ camera, onClone }: CameraCardProps) {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
+            {/* Status Indicator */}
             <div className="flex items-center gap-2">
               <span className={`inline-block w-2 h-2 rounded-full ${statusIndicator.color}`} />
               <span className="text-sm font-medium">{statusIndicator.text}</span>
               {camera.isRecording && (
-                <span className="ml-2 text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full flex items-center gap-1">
-                  <Video className="h-3 w-3" />
+                <span className="ml-2 text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
                   Grabando
                 </span>
               )}
             </div>
 
+            {/* Camera Info */}
             <div className="text-sm space-y-1">
               <p className="text-muted-foreground">
                 IP: {camera.ipAddress}
@@ -233,6 +189,8 @@ export default function CameraCard({ camera, onClone }: CameraCardProps) {
                 </>
               )}
             </div>
+
+            {/* Recording Prefix */}
             <div className="flex items-center justify-between">
               <TooltipProvider>
                 <Tooltip>
@@ -293,9 +251,13 @@ export default function CameraCard({ camera, onClone }: CameraCardProps) {
                 </TooltipProvider>
               </div>
             )}
+
+            {/* RTSP URL */}
             <p className="text-sm text-muted-foreground font-mono break-all">
               RTSP: {getSecureRtspUrl(camera.rtspUrl)}
             </p>
+
+            {/* Latest Recording Info */}
             {latestRecording && (
               <p className="text-sm text-muted-foreground">
                 Última Grabación: {new Date(latestRecording.startTime).toLocaleString()}

@@ -1,0 +1,96 @@
+client:536 WebSocket connection to 'ws://localhost:5000/?token=6OkCQ-9qmdjU' failed: 
+setupWebSocket @ client:536
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'ws://localhost:undefined/?token=6OkCQ-9qmdjU' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+chunk-RPCDYKBN.js?v=abb02fcd:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+logger.ts:17 [2025-03-07T01:20:06.862Z] [INFO] Application starting
+logger.ts:17 [2025-03-07T01:20:06.865Z] [INFO] Initializing router
+api/user:1 
+            
+            
+           Failed to load resource: the server responded with a status of 401 (Unauthorized)
+chunk-RPCDYKBN.js?v=abb02fcd:521 Warning: Cannot update a component (`Switch`) while rendering a different component (`AuthPage`). To locate the bad setState() call inside `AuthPage`, follow the stack trace as described in https://reactjs.org/link/setstate-in-render
+    at AuthPage (http://localhost:5000/src/pages/auth-page.tsx:44:53)
+    at Route (http://localhost:5000/@fs/home/mforum/livingLab/EnterpriseWorkflow-2/node_modules/.vite/deps/wouter.js?v=d63a3d6e:323:16)
+    at Switch (http://localhost:5000/@fs/home/mforum/livingLab/EnterpriseWorkflow-2/node_modules/.vite/deps/wouter.js?v=d63a3d6e:379:17)
+    at Router
+    at AuthProvider (http://localhost:5000/src/hooks/use-auth.tsx:26:32)
+    at QueryClientProvider (http://localhost:5000/@fs/home/mforum/livingLab/EnterpriseWorkflow-2/node_modules/.vite/deps/@tanstack_react-query.js?v=6bae264b:2805:3)
+    at App
+printWarning @ chunk-RPCDYKBN.js?v=abb02fcd:521
+chunk-RPCDYKBN.js?v=abb02fcd:11595 Uncaught Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at renderWithHooks (chunk-RPCDYKBN.js?v=abb02fcd:11595:19)
+    at updateFunctionComponent (chunk-RPCDYKBN.js?v=abb02fcd:14582:28)
+    at beginWork (chunk-RPCDYKBN.js?v=abb02fcd:15924:22)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=abb02fcd:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=abb02fcd:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=abb02fcd:3733:39)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=abb02fcd:19765:15)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=abb02fcd:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=abb02fcd:19137:13)
+    at renderRootSync (chunk-RPCDYKBN.js?v=abb02fcd:19116:15)
+chunk-RPCDYKBN.js?v=abb02fcd:11595 Uncaught Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at renderWithHooks (chunk-RPCDYKBN.js?v=abb02fcd:11595:19)
+    at updateFunctionComponent (chunk-RPCDYKBN.js?v=abb02fcd:14582:28)
+    at beginWork (chunk-RPCDYKBN.js?v=abb02fcd:15924:22)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=abb02fcd:19753:22)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=abb02fcd:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=abb02fcd:19137:13)
+    at renderRootSync (chunk-RPCDYKBN.js?v=abb02fcd:19116:15)
+    at performSyncWorkOnRoot (chunk-RPCDYKBN.js?v=abb02fcd:18874:28)
+    at flushSyncCallbacks (chunk-RPCDYKBN.js?v=abb02fcd:9119:30)
+    at chunk-RPCDYKBN.js?v=abb02fcd:18627:21
+sensors-page.tsx:33 Uncaught ReferenceError: React is not defined
+    at SensorsPage (sensors-page.tsx:33:42)
+    at renderWithHooks (chunk-RPCDYKBN.js?v=abb02fcd:11548:26)
+    at mountIndeterminateComponent (chunk-RPCDYKBN.js?v=abb02fcd:14926:21)
+    at beginWork (chunk-RPCDYKBN.js?v=abb02fcd:15914:22)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=abb02fcd:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=abb02fcd:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=abb02fcd:3733:39)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=abb02fcd:19765:15)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=abb02fcd:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=abb02fcd:19137:13)
+sensors-page.tsx:33 Uncaught ReferenceError: React is not defined
+    at SensorsPage (sensors-page.tsx:33:42)
+    at renderWithHooks (chunk-RPCDYKBN.js?v=abb02fcd:11548:26)
+    at mountIndeterminateComponent (chunk-RPCDYKBN.js?v=abb02fcd:14926:21)
+    at beginWork (chunk-RPCDYKBN.js?v=abb02fcd:15914:22)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=abb02fcd:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=abb02fcd:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=abb02fcd:3733:39)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=abb02fcd:19765:15)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=abb02fcd:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=abb02fcd:19137:13)
+chunk-RPCDYKBN.js?v=abb02fcd:14032 The above error occurred in the <SensorsPage> component:
+
+    at SensorsPage (http://localhost:5000/src/pages/sensors-page.tsx:29:36)
+    at div
+    at main
+    at div
+    at div
+    at MainLayout (http://localhost:5000/src/components/layout/main-layout.tsx:19:30)
+    at component
+    at ProtectedRoute (http://localhost:5000/src/lib/protected-route.tsx:22:3)
+    at Switch (http://localhost:5000/@fs/home/mforum/livingLab/EnterpriseWorkflow-2/node_modules/.vite/deps/wouter.js?v=d63a3d6e:379:17)
+    at Router
+    at AuthProvider (http://localhost:5000/src/hooks/use-auth.tsx:26:32)
+    at QueryClientProvider (http://localhost:5000/@fs/home/mforum/livingLab/EnterpriseWorkflow-2/node_modules/.vite/deps/@tanstack_react-query.js?v=6bae264b:2805:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-RPCDYKBN.js?v=abb02fcd:14032
+chunk-RPCDYKBN.js?v=abb02fcd:9129 Uncaught ReferenceError: React is not defined
+    at SensorsPage (sensors-page.tsx:33:42)
+    at renderWithHooks (chunk-RPCDYKBN.js?v=abb02fcd:11548:26)
+    at mountIndeterminateComponent (chunk-RPCDYKBN.js?v=abb02fcd:14926:21)
+    at beginWork (chunk-RPCDYKBN.js?v=abb02fcd:15914:22)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=abb02fcd:19753:22)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=abb02fcd:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=abb02fcd:19137:13)
+    at renderRootSync (chunk-RPCDYKBN.js?v=abb02fcd:19116:15)
+    at recoverFromConcurrentError (chunk-RPCDYKBN.js?v=abb02fcd:18736:28)
+    at performSyncWorkOnRoot (chunk-RPCDYKBN.js?v=abb02fcd:18879:28)
